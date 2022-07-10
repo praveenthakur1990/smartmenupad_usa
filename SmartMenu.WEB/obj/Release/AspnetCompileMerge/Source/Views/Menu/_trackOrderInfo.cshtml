@@ -1,0 +1,186 @@
+﻿@model SmartMenu.DAL.Models.OrderViewModel
+@{ int i = 1; }
+@if (Model != null)
+{
+    <div class="row" id="printDiv">
+        <div class="col-lg-12">
+            <div class="track">
+                <div class="step @(Model.OrderStatusLogList.Count() == 0 ? "active" : (Model.OrderStatusLogList.Where(c => c.Status == "Accepted").Any() || Model.OrderStatusLogList.Where(c => c.Status == "Rejected").Any() ? "active" : ""))">
+                    <span class="icon"><i class="sm-received"></i> </span>
+                    <span class="text">Order Recevied</span>
+                    <span class="date">@Model.OrderedDate.ToString("F")</span>
+                </div>
+                @if (Model.OrderStatusLogList.Count() > 0 && Model.OrderStatusLogList.Where(c => c.Status == "Rejected").FirstOrDefault() != null)
+                {
+                    <div class="step active">
+                        <span class="icon"><i class="sm-rejected"></i> </span>
+                        <span class="text">Rejected</span>
+                        <span class="date">@Model.LastUpdatedDate.Value.ToString("F")</span>
+                    </div>
+                }
+                else
+                {
+                    <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Accepted").Any() ? "active" : "")">
+                        <span class="icon"><i class="sm-right"></i> </span>
+                        <span class="text">Accepted</span>
+                        <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Accepted").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                    </div>
+                    <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Preparing Food").Any() ? "active" : "")">
+                        <span class="icon"><i class="sm-cooking-1"></i> </span>
+                        <span class="text">Preparing Food</span>
+                        <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Preparing Food").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                    </div>
+                    if (Model.OrderedType == "D")
+                    {
+                        <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Out for delivery").Any() ? "active" : "")">
+                            <span class="icon"><i class="sm-out-delivery"></i> </span>
+                            <span class="text">Out for Delivery</span>
+                            <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Out for delivery").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                        </div>
+                        <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Delivered").Any() ? "active" : "")">
+                            <span class="icon"><i class="sm-done-delivered"></i> </span>
+                            <span class="text">Delivered</span>
+                            <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Delivered").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                        </div>
+                    }
+                    if (Model.OrderedType == "P")
+                    {
+                        <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Ready for pickup" && Model.OrderedType == "P").Any() ? "active" : "")">
+                            <span class="icon"><i class="sm-out-delivery"></i> </span>
+                            <span class="text">Ready for pickup</span>
+                            <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Ready for pickup" && Model.OrderedType == "P").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                        </div>
+
+                        <div class="step @(Model.OrderStatusLogList.Where(c => c.Status == "Picked" && Model.OrderedType == "P").Any() ? "active" : "")">
+                            <span class="icon"><i class="sm-done-delivered"></i> </span>
+                            <span class="text">Picked</span>
+                            <span class="date">@Model.OrderStatusLogList.Where(c => c.Status == "Picked" && Model.OrderedType == "P").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault()</span>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="row">
+                <div class="col-lg-4 orderInvoiceDetail">
+                    <h3>Order Details</h3>
+                    <p><b>Order Number:</b> @Model.OrderNo</p>
+                    <p><b>Order Date & time:</b> @Model.OrderedDate</p>
+                    <p><b>Order Status:</b> @Model.Status</p>
+                    <p><b>Order Type:</b> @(Model.OrderedType == "P" ? "PickUp" : "Delivery")</p>
+                </div>
+                <div class="col-lg-4 orderInvoiceDetail">
+                    <h3>Payment Details</h3>
+                    <p><b>Payment Option:</b> @Model.Mode</p>
+                    <p><b>Payment Status:</b> @Model.PaymentStatus</p>
+                    @if (Model.OrderedType == "P")
+                    {
+                        <p><b>PickUp DateTime:</b> @Model.PickUpDateTime</p>
+                    }
+                    else
+                    {
+                        <p><b>Delivery Date & Time:</b> @(Model.OrderStatusLogList.Where(c => c.Status == "Delivered").Any() ? Model.OrderStatusLogList.Where(c => c.Status == "Delivered").Select(c => c.ChangedDateTime.ToString("F")).FirstOrDefault() + "UTC" : "--")</p>
+                    }
+                </div>
+                <div class="col-lg-4 orderInvoiceDetail">
+                    <h3>Customer Details</h3>
+                    <p><b>Name:</b> @Model.CustomerName</p>
+                    <p><b>Address:</b> @Model.CustomerAddress</p>
+                    <p><b>Mobile:</b> @Model.MobileNumber</p>
+                </div>
+            </div>
+        </div><!--order detail-->
+        <div class="col-lg-12 orderListInvoice">
+            <div class="col-lg-12 border-bottom orderListHeading">
+                <div class="row">
+                    <div class="col-lg-1"><b>S.No</b></div>
+                    <div class="col-lg-5"><b>Item Name</b></div>
+                    <div class="col-lg-2"><b>Price</b></div>
+                    <div class="col-lg-2 text-center"><b>Quantity</b></div>
+                    <div class="col-lg-2 text-right"><b>Amount</b></div>
+                </div>
+            </div>
+            @if (Model.OrderedDetails.Count() > 0)
+            {
+                foreach (var item in Model.OrderedDetails)
+                {
+                    decimal _addOnPrice = 0;
+                    <div class="col-lg-12 orderItemList">
+                        <div class="row">
+                            <div class="col-lg-1">@i</div>
+                            <div class="col-lg-5">
+                                @item.Name
+                                @if (item.IsMultipleSize == true)
+                                {
+                                    <span>Size:-@item.ItemSizeList.Select(c => c.Name).FirstOrDefault()</span>
+                                }
+                                @if (item.AddOnsItemList != null && item.AddOnsItemList.Count() > 0)
+                                {
+                                    foreach (var data in item.AddOnsItemList)
+                                    {
+                                        _addOnPrice += @data.AddOnChoiceItems.Select(c => c.Price).ToList().Sum();
+                                        <span class="@data.AddOnChoiceItems.Select(c => c.Price).ToList().Sum()">@data.Title:-@String.Join(",", data.AddOnChoiceItems.Select(c => c.Name).FirstOrDefault())</span>
+                                    }
+                                }
+                            </div>
+                            <div class="col-lg-2">@ViewBag.CurrencySymbol@(item.IsMultipleSize == true ? item.ItemSizeList.Select(c => c.Price).FirstOrDefault() : item.Price + _addOnPrice)</div>
+                            <div class="col-lg-2 text-center">@item.Qty</div>
+                            <div class="col-lg-2 text-right">@ViewBag.CurrencySymbol@item.TotalAmount</div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+        @if (Model.OrderedDetails.Count() > 0)
+        {
+            <div class="col-lg-12">
+                <div class="row orderAmountList">
+                    <div class="col-lg-6">
+                        @if (Model.SpecialInstruction != string.Empty)
+                        {
+                            <span>Special Instruction:-@Model.SpecialInstruction</span>
+                        }
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="col-lg-12 orderPopupMargin">
+                            <div class="row">
+                                <div class="col-lg-10 text-right">Sub-Total</div>
+                                <div class="col-lg-2 text-right">@ViewBag.CurrencySymbol@(Model.OrderedDetails.Sum(c => c.TotalAmount))</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 orderPopupMargin">
+                            <div class="row">
+                                <div class="col-lg-10 text-right">Tax Charges</div>
+                                <div class="col-lg-2 text-right">@String.Format("{0}{1}", ViewBag.CurrencySymbol, "0.00")</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 orderPopupMargin">
+                            <div class="row">
+                                <div class="col-lg-10 text-right">Delivery Charges</div>
+                                <div class="col-lg-2 text-right">@String.Format("{0}{1}", ViewBag.CurrencySymbol, "0.00")</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-12 orderPopupMargin">
+                            <div class="row">
+                                <div class="col-lg-10 text-right">Discount</div>
+                                <div class="col-lg-2 text-right">@String.Format("{0}{1}", ViewBag.CurrencySymbol, "0.00")</div>
+                            </div>    
+                        </div>
+                        <div class="col-lg-12">
+                            <div class="row">
+                                <div class="col-lg-10 text-right"><b>Total Amount</b></div>
+                                <div class="col-lg-2 text-right"><b>@ViewBag.CurrencySymbol@(Model.OrderedDetails.Sum(c => c.TotalAmount))</b></div>
+                            </div>    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-danger" role="alert">
+        No order found
+    </div>
+}

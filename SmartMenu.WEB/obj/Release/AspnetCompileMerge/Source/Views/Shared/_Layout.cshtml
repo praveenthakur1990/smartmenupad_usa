@@ -1,0 +1,324 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Smart Menu Pad</title>
+    <link rel="icon" type="image/x-icon" href="~/Content/frontend/assets/img/favicon-32x32.png" />
+    <link rel="apple-touch-icon" sizes="194x194" href="/apple-touch-icon.png" type="image/png">
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&family=Ovo&display=swap" rel="stylesheet">
+    <!-- Font Icon-->
+    @*<link href="https://file.myfontastic.com/azDXsQbFSnnaJEGPEtzUDX/icons.css" rel="stylesheet">*@
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="~/Content/frontend/css/default.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/theme/css/toastr.css" rel="stylesheet" />
+</head>
+@{ var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString(); }
+<body id="page-top">
+    <!-- Masthead-->
+    <header id="headerSection">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand js-scroll-trigger" href="#">
+                    <img src="~/Content/frontend/img/logo.svg" alt="logo">
+                </a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse"
+                        data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                        aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item @(controllerName=="Home" && actionName=="Index" ? "active":"")"><a class="nav-link js-scroll-trigger" href="/">Home</a></li>
+                        <li class="nav-item" @(controllerName == "Home" && actionName == "OnlineMenu" ? "active" : "")><a class="nav-link js-scroll-trigger" href="@Url.Action("OnlineMenu","Home")">Online Ordering</a></li>
+                        <li class="nav-item" @(controllerName == "Home" && actionName == "QrMenu" ? "active" : "")><a class="nav-link js-scroll-trigger" href="@Url.Action("QrMenu","Home")">QR Menu</a></li>
+                        <!--<li class="nav-item"><a class="nav-link js-scroll-trigger" href="#">Blog</a></li>-->
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="#" data-toggle="modal" data-target="#requestForDemoModal">
+                                <span class="btn-black btnHover">Schedule Demo</span>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link js-scroll-trigger" href="@Url.Action("Login","Account",new {area="Securepanel" })">
+                                <span class="btn-login">Login</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        @if (actionName == "Index")
+        {
+            <div class="container pt-5" id="sliderSection">
+                <div class="row">
+                    <div class="col-lg-6 pt-1 mobileHeading">
+                        <h1>
+                            Put your <br>
+                            <span class="txt-rotate" data-period="2000"
+                                  data-rotate='[ "Fine Dining", "Bakery", "Cafeteria" ]'></span> in
+                            <br>your customer’s pocket
+                        </h1>
+                        <p class="pt-2 pr-5">Let Your Customers Order Food Online From Your Website.</p>
+                        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#requestForDemoModal">Get Started Now</button>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="~/Content/frontend/img/slider-image.svg" alt="image" title="Smart Menu Pad" class="sliderImage" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (actionName == "OnlineMenu")
+        {
+            <div class="container pt-5" id="sliderSection">
+                <div class="row">
+                    <div class="col-lg-6 pt-1 mobileHeading">
+                        <h1>
+                            Create A <br>Modern-Day Online Delivery Menu
+                        </h1>
+                        <p class="pt-2 pr-5">Let Your New-Age Customers Order Food Conveniently from Your High-End E-Menu</p>
+                        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#talkExpertModal">Get Started Now</button>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="~/Content/frontend/img/online-delivery-menu.svg" alt="image" title="Smart Menu Pad Online Order Menu" class="sliderImage" />
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (actionName == "QrMenu")
+        {
+            <div class="container pt-5" id="sliderSection">
+                <div class="row">
+                    <div class="col-lg-6 pt-1 mobileHeading">
+                        <h1>
+                            We Make <br>Digital Menu <br>For You
+                        </h1>
+                        <p class="pt-2 pr-5">Let Your Customers Order Food Delivery Online From Your Website</p>
+                        <button class="btn btn-primary" href="#" data-toggle="modal" data-target="#talkExpertModal">Get Started Now</button>
+                    </div>
+                    <div class="col-lg-6 text-center">
+                        <img src="~/Content/frontend/img/slider-image.svg" alt="image" title="Smart Menu Pad" class="sliderImage" />
+                    </div>
+                </div>
+            </div>
+        }
+
+    </header>
+    @RenderBody()
+    <footer class="footer-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-7">
+                    <div class="row">
+                        <div class="col-lg-4 col-md-6 footerSection">
+                            <h3>Products</h3>
+                            <ul>
+                                <li><a href="@Url.Action("QrMenu","Home")">QR Online Menu</a></li>
+                                <li><a href="@Url.Action("OnlineMenu","Home")">Online Order</a></li>
+                                <!--<li><a href="#">Website Design</a></li>-->
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 footerSection">
+                            <h3>Company</h3>
+                            <ul>
+                                <li><a href="#">About Us</a></li>
+                                <li><a href="#">Our Team</a></li>
+                                <li><a href="#">Blog</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-4 col-md-6 footerSection">
+                            <h3>Support</h3>
+                            <ul>
+                                <li><a href="#" data-toggle="modal" data-target="#requestForDemoModal">Demo Request</a></li>
+                                <li><a href="#">Terms and condition</a></li>
+                                <li><a href="#">Privacy Policy</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-5 col-md-6 footerSection">
+                    <h3>Our Newsletter</h3>
+                    <p>Join our newsletter list to get the latest news, updates and social offers delivered directly in your inbox.</p>
+                    <form id="frmNewsLetter">
+                        <div class="newsletterInput">
+                            <input type="text" name="EmailAddress" id="EmailAddress" maxlength="100" autocomplete="off" placeholder="Enter email address">
+                            <button type="button" onclick="btnNewsLetterSubscriber()">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="copyRight">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <ul class="pt-3">
+                            <li><a href="https://www.instagram.com/smartmenupad.inc/" target="_blank"><i class="icon smp-instagram"></i></a></li>
+                            <li><a href="https://www.facebook.com/Smart-Menu-Pad-100191004980196" target="_blank"><i class="smp-facebook"></i></a></li>
+                        </ul>
+                        <p>Copyright © 2020-@DateTime.Now.Year Smart Menu Pad All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="requestForDemoModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body popupBg p-0">
+                    <div class="popLeft">
+                        <button type="button" class="demoPopupClose" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="frmRequestDemo">
+                        <div class="popRight">
+                            <div class="formRow">
+                                <h1>Request a Demo</h1>
+                                <p>Just Answer a fre question so that we can personalize the right experience to you.</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="formRow">
+                                        <label>What's your full name?</label>
+                                        <input type="text" name="FullName" id="FullName" maxlength="50" placeholder="Full Name" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="formRow">
+                                        <label>What's your phone number?</label>
+                                        <input type="text" class="numbers-only" name="PhoneNumber" id="PhoneNumber" maxlength="10" placeholder="Phone Number" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="formRow">
+                                        <label>What's your email address?</label>
+                                        <input type="text" name="EmailAddress" id="EmailAddress" maxlength="100" placeholder="Email Address" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <div class="formRow">
+                                        <label>What's the name of your restaurant?</label>
+                                        <input type="text" name="RestaurantName" id="RestaurantName" maxlength="50" placeholder="Restaurant Name" autocomplete="off" />
+                                    </div>
+                                </div>
+                                <div class="col-lg-6">
+                                    <div class="formRow">
+                                        <label>How many locations do you have?</label>
+                                        <select name="NoOfLocation" id="NoOfLocation">
+                                            <option value="">Select</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                            <option>6</option>
+                                            <option>7</option>
+                                            <option>8</option>
+                                            <option>9</option>
+                                            <option>10</option>
+                                            <option>More than 10</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="formRow">
+                                        <button type="button" onclick="btnRequestDemo()">Submit</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price -->
+    <div class="modal fade bd-example-modal-lg" id="talkExpertModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-body p-5">
+                    <button type="button" class="demoPopupClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="formRow text-center pb-3">
+                        <img src="~/Content/frontend/img/call-icon.svg" alt="image" />
+                        <h1>Talk to our expert</h1>
+                        <p>Just add below information and our expert will contact you.</p>
+                    </div>
+                    <form id="frmTalkToExpert">
+                        <div class="formRow">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>First Name</label>
+                                    <input type="text" name="FirstName" id="FirstName" maxlength="50" autocomplete="off" placeholder="Enter First Name" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Last Name</label>
+                                    <input type="text" name="LastName" id="LastName" maxlength="50" autocomplete="off" placeholder="Enter Last Name" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="formRow">
+                            <label>Choose Plan</label>
+                            <select name="ChoosePlan" id="ChoosePlan">
+                                <option value="">Select</option>
+                                <option value="Basic Plan">Basic Plan $199/per month</option>
+                                <option value="Standard Plan">Standard Plan $299/per month</option>
+                                <option value="Premium Plan">Premium Plan $499/per month</option>
+                            </select>
+                        </div>
+                        <div class="formRow">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <label>Email Address</label>
+                                    <input type="text" name="EmailAddress" id="EmailAddress" maxlength="100" autocomplete="off" placeholder="Enter Email Address" />
+                                </div>
+                                <div class="col-lg-6">
+                                    <label>Phone Number</label>
+                                    <input type="text" class="numbers-only" name="PhoneNumber" id="PhoneNumber" maxlength="10" autocomplete="off" placeholder="Enter Phone Number" />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="formRow">
+                            <button type="button" onclick="btnTalkExpert()">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JS-->
+    <script src="~/Content/frontend/js/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Content/frontend/js/bootstrap.bundle.min.js"></script>
+    <!-- Third party plugin JS-->
+    <script src="~/Content/frontend/js/jquery.easing.min.js"></script>
+    <!-- plugin JS-->
+    <script src="~/Content/frontend/js/scripts.js"></script>
+    <script src="~/Content/frontend/js/animation.js"></script>
+    <script src="~/Content/frontend/js/timeScript.js"></script>
+    <script src="~/Content/frontend/js/time.js"></script>
+    <script src="~/Content/theme/js/toastr.js"></script>
+    <script src="~/Content/project/js/mainSite/mainSite.js"></script>
+</body>
+</html>

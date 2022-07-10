@@ -1,0 +1,67 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INSPINIA | Register</title>
+    <link href="~/Content/theme/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/style.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/toastr.css" rel="stylesheet" />
+</head>
+<body class="gray-bg">
+    <div class="middle-box text-center loginscreen   animated fadeInDown">
+        <div>
+            <div>
+                <h1 class="logo-name">IN+</h1>
+            </div>
+            <h3>Register to IN+</h3>
+            <p>Create account to see it in action.</p>
+            <form id="frmRegister" class="m-t" role="form">
+                @Html.AntiForgeryToken()
+                <div class="form-group">
+                    <input type="email" class="form-control" id="email" name="email" placeholder="Email" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="Password" />
+                </div>
+                <div class="form-group">
+                    <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" />
+                </div>
+                <div class="form-group">
+                    <div class="checkbox i-checks"><label> <input type="checkbox" name="terms"><i></i> Agree the terms and policy </label></div>
+                </div>
+                <button type="button" id="btnRegister" class="btn btn-primary block full-width m-b">Register</button>
+
+                <p class="text-muted text-center"><small>Already have an account?</small></p>
+                <a class="btn btn-sm btn-white btn-block" href="@Url.Action("Login","Account",new {area="securepanel" })">Login</a>
+            </form>
+            <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2020</small> </p>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/Content/theme/js/jquery-2.1.1.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Content/theme/js/bootstrap.min.js"></script>
+    <!-- iCheck -->
+    <script src="~/Content/theme/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/Content/theme/js/toastr.js"></script>
+    <script src="~/Content/project/js/register.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.i-checks').iCheck({
+                checkboxClass: 'icheckbox_square-green',
+                radioClass: 'iradio_square-green',
+            });
+        });
+    </script>
+</body>
+
+</html>

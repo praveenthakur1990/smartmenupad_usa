@@ -1,0 +1,140 @@
+﻿@model SmartMenu.DAL.Models.MenuDataModel
+@using SmartMenu.WEB.Helpers;
+@{
+    ViewBag.title = "Checkout";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@section scripts{
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false&libraries=places&key=AIzaSyDpzQ5OcH6MUL5I1yFK5K7Sa5Jvy7uFvA8"></script>
+}
+<div class="container containerMinHeight">
+    <div class="row">
+        <div class="col-12 mt-5">
+            <div class="row" id="navItemSec1">
+                <div class="col-xl-12" style="text-align: right !important;">
+                    <button class="checkoutBtn" type="button" onclick="window.location.href ='@Url.Action("GetMenu","Menu")'">Add More Item</button>
+                </div>
+                <div class="col-xl-8 col-md-12 mt-4 mb-4 deliverySec order-xl-1 order-lg-2 order-md-2 order-sm-2">
+                    <div class="row">
+                        <form id="frmGenerateOTP">
+                            <div class="col-12 mb-4">
+                                <div class="checkoutSec">
+                                    <h3>Login with your mobile number</h3>
+                                    <p>It's easy to login or Create account with @Model.RestaurantModel.Name</p>
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-5 col-sm-4 mb-3">
+                                            <input type="text" class="number-format" name="mobileNumber" id="mobileNumber" placeholder="Enter Mobile Number" maxlength="15" />
+                                            <small id="changeNumber" onclick="changeNumber()" style="display:none; cursor: pointer;margin: 10px 0px 0px; position: relative; top: 5px; font-size: 12px;">Click here for change number</small>
+                                        </div>
+                                        <div class="col-lg-3 col-md-3 col-sm-4 mb-3" id="enterOtpDiv" style="display:none">
+                                            <input type="text" name="Otp" placeholder="OTP Number" maxlength="4" autocomplete="off" />
+                                        </div>
+                                        <div class="col-lg-5 col-md-4 col-sm-4 mb-3" id="btnOTP">
+                                            <button class="checkoutBtn" id="btnSendOTP" type="button" onclick="sendOTP()">Generate OTP</button>
+                                            <div class="row" id="btnVerify" style="display:none">
+                                                <div class="col-6">
+                                                    <button class="checkoutBtn" type="button" onclick="verifyOTP()">Verify</button>
+                                                </div>
+                                                <div class="col-6">
+                                                    <small id="resendOtp" onclick="sendOTP()" style="cursor: pointer; position: relative; top: 16px; color: #333;">Resend</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="userInfoDIv">
+                        </div>
+                        <div class="paymentSection">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-4 col-md-12 mt-4 mb-4 order-xl-2 order-lg-1 order-md-1 order-sm-1">
+                    <div class="checkoutCartDiv">
+                        <div class="col-12">
+                            <h3>Order Summary</h3>
+                            <p>From @Model.RestaurantModel.Name</p>
+                        </div>
+                        <div class="col-12 mt-4" id="orderSummary">
+                            @if (SessionManager.AddTocartMenuItem.Count() > 0)
+                            {
+                                foreach (var cartItem in SessionManager.AddTocartMenuItem)
+                                {
+                                    <div class="row mb-3">
+                                        <div class="col-10">
+                                            <div class="cartProductName">@cartItem.Name</div>
+                                            @if (cartItem.IsMultipleSize == true)
+                                            {
+                                                <span class="productAddons"><b>Size:-</b>@cartItem.ItemSizeList.Select(c => c.Name).FirstOrDefault()</span>
+                                            }
+                                            @if (cartItem.AddOnsItemList != null && cartItem.AddOnsItemList.Count() > 0)
+                                            {
+                                                foreach (var data in cartItem.AddOnsItemList)
+                                                {
+                                                    <span class="productAddons"><b>@data.Title:-</b>@String.Join(",", data.AddOnChoiceItems.Select(c => c.Name).FirstOrDefault())</span>
+                                                }
+                                            }
+                                        </div>
+                                        <div class="col-2 text-end">
+                                            <span class="checkoutPrice">@ViewBag.CurrencySymbol@(cartItem.TotalAmount)</span>
+                                        </div>
+                                    </div>
+                                }
+                                <div class="col-12">
+                                    <label><b>Do you have special instructions for this order?</b></label>
+                                    <textarea placeholder="Add your special instructions" id="txtSpecialInstruction" class="specInput"></textarea>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="col-12 cartItemRow">
+                                    <div class="row">
+                                        <div class="alert alert-danger text-center" role="alert">
+                                            No item added yet
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-12">
+                            <div class="taxAmountRow">
+                                <p>Sub Total</p>
+                                <span class="subTotal">@ViewBag.CurrencySymbol@(SessionManager.AddTocartMenuItem!=null && SessionManager.AddTocartMenuItem.Count() > 0 ? SessionManager.AddTocartMenuItem.Select(c=>c.TotalAmount).Sum():0)</span>
+                            </div>
+                            <div class="taxAmountRow">
+                                <p>Taxes (@String.Format("{0} {1}", @ViewBag.Tax, "%"))</p>
+                                <span>@String.Format("{0}{1}", ViewBag.CurrencySymbol, ViewBag.TaxAmt)</span>
+                            </div>
+                            <div class="taxAmountRow">
+                                <p>Delivery Charges</p>
+                                <span>@String.Format("{0}{1}", ViewBag.CurrencySymbol, ViewBag.DeliveryCharges)</span>
+                            </div>
+                            <hr>
+                            <div class="totalAmountRow">
+                                <p>Grand Total</p>
+                                <span>@ViewBag.CurrencySymbol@ViewBag.TotalAmt</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form action="/Menu/PlaceOrder" method="POST" style="display:none">
+    <input type="hidden" id="hdnPickUpDateTime" name="hdnPickUpDateTime" />
+    <input type="hidden" id="hdnPickUpAddress" name="hdnPickUpAddress" />
+    <input type="hidden" id="hdnCustomerId" name="hdnCustomerId" />
+    <input type="hidden" id="hdnOrderType" name="hdnOrderType" />
+    <input type="hidden" name="hdnTotalAmount" id="" value="@ViewBag.TotalAmt" />
+    <input type="hidden" id="hdnSpecialInstruction" name="hdnSpecialInstruction" value="" />
+    <script src="//checkout.stripe.com/v2/checkout.js"
+            class="stripe-button"
+            data-key="@ViewBag.Publishkey"
+            data-locale="auto"
+            data-currency=@ViewBag.CurrencyCode
+            data-description="Sample Charge"
+            data-amount="@(ViewBag.TotalAmt * 100)">
+    </script>
+</form>

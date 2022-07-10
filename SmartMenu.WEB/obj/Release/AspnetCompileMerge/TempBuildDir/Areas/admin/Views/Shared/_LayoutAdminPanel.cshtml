@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/theme/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/style.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/fonts.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/toastr.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/bootstrap-switch/bootstrap-switch.min.css" rel="stylesheet" />
+    <!--..google font..-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    @*<style>
+            .dataTables_length{
+                display:none !important;
+            }
+            div.dataTables_filter {
+                text-align: left !important;
+            }
+        </style>*@
+</head>
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+}
+<body>
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side sidenav" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu sideNavList" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <img alt="image" src="@Url.Content(ViewBag.RestutantLogoImg)" class="restroLogoImage" />
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold">@SmartMenu.WEB.Helpers.SessionManager.LoginResponse.UserName</strong>
+                                    </span>
+                                    <span class="text-xs block">@SmartMenu.WEB.Helpers.SessionManager.LoginResponse.RoleName <b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu fadeInRight m-t-xs">
+                                <li><a href="@Url.Action("Profile","Dashboard",new {area="admin" })">Profile</a></li>
+                                <li><a href="javascript:void();" onclick="logout()">Logout</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">SM+</div>
+                    </li>
+                    <li class="@(controllerName=="Dashboard"? "active":"")">
+                        <a href="@Url.Action("Index","Dashboard",new {area="admin" })">
+                            <i class="sm-dashbaord"></i> <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="Orders" ? "active":"")">
+                        <a href="@Url.Action("Index","Orders",new {area="admin" })">
+                            <i class="sm-shopping-cart"></i> <span class="nav-label">Orders</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="Category" ? "active":"")">
+                        <a href="@Url.Action("Index","Category",new {area="admin" })">
+                            <i class="sm-document"></i> <span class="nav-label">Categories</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="Menu" ? "active":"")">
+                        <a href="@Url.Action("Index","Menu",new {area="admin" })">
+                            <i class="sm-fine-dining"></i> <span class="nav-label">Menu</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="Customer" ? "active":"")">
+                        <a href="@Url.Action("Index","Customer",new {area="admin" })">
+                            <i class="sm-user"></i><span class="nav-label">Customers</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="ContactUs" ? "active":"")">
+                        <a href="@Url.Action("Index","ContactUs",new {area="admin" })">
+                            <i class="sm-email"></i><span class="nav-label">Newsletter</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="@Url.Action("Profile","Dashboard",new {area="admin" })">
+                            <i class="sm-setting"></i><span class="nav-label">Setting</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2" href="#"><i style="font-size: 23px; color: #000000;" class="sm-menu"></i></a>
+                    </div>
+                    <div class="onlineOffline" style=" text-align: right; margin: 10px;">
+                        <input type="checkbox" name="IsOnlineOffline" value="" class="goOnlineOffline" @(ViewBag.IsOnline == true ? "checked" : "") />
+                    </div>
+                </nav>
+            </div>
+            <div class="wrapper">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+
+    <!-- Mainly scripts -->
+    <script src="~/Content/theme/js/jquery-2.1.1.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Content/theme/js/bootstrap.min.js"></script>
+    <script src="~/Content/theme/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Content/theme/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="~/Content/theme/js/inspinia.js"></script>
+    <script src="~/Content/theme/js/toastr.js"></script>
+    <script src="~/Content/theme/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/Content/theme/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/Content/theme/js/jquery-input-mask-phone-number.js"></script>
+    <script src="~/Content/theme/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/theme/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <script src="~/Content/project/js/common.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>
+
+<!-- Modal -->
+<div class="modal fade" id="viewOrderModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="orderTitle">
+                    Order Details
+                    <span aria-hidden="true" class="close" data-dismiss="modal" aria-label="Close">X</span>
+                </div>
+            </div>
+            <div class="modal-body p-0">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="goOnlineOfflineModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content text-center">
+            <div class="modal-body closeAlertPopup">
+                <img src="~/Content/img/restaurantClose.png" alt="Image" />
+                <input type="hidden" id="onlineOfflineStatus" />
+                <p>Are you sure you want to go <span class="onlineOfflinetext"></span>?</p>
+                <button type="button" class="submitBtn" onclick="updateOnlineOffline()">Confirm</button>
+                <button type="button" class="cancelBtn" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>

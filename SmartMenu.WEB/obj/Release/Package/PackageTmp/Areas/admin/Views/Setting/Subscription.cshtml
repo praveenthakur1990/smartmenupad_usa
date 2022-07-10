@@ -1,0 +1,120 @@
+﻿
+@{
+    ViewBag.Title = "Subscription";
+    Layout = "~/Areas/admin/Views/Shared/_LayoutAdminPanel.cshtml";
+}
+
+<div class="row pageTitle">
+    <div class="col-lg-12">
+        <h1>Setting</h1>
+        <p>This page allow you to change configuration what you have made</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="ibox-content settingSideNav">
+                    @{Html.RenderPartial("_SettingMenu");}
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div class="ibox-content wrapperPadding">
+                    <form id="frmAddUpdateBusinessHours" class="form-horizontal">
+                        <div class="row">
+                            <div class="col-lg-12 profilViewBottom">
+                                <h2 class="formHeading">Subscription</h2>
+                                <p>Subscription detail</p>
+                            </div>
+                            <div class="form-group">
+                                @if (Convert.ToBoolean(ViewBag.IsPaid) == true)
+                                {
+                                    <button id="checkout-button" type="button" class="form-control">Pay ($@ViewBag.PlanCost)</button>
+                                }
+                                else if (Convert.ToBoolean(ViewBag.PaymentInProcess) == true)
+                                {
+                                    <span>Your payment in process..Please wait..</span><br />
+                                }
+                                else
+                                {
+                                    if (Convert.ToBoolean(ViewBag.IsPaid) == false && ViewBag.PlanName == "Free Plan")
+                                    {
+                                        <span>Plan Name:@ViewBag.PlanName</span><br />
+                                    }
+                                    else
+                                    {
+                                        if (Convert.ToBoolean(ViewBag.IsCancelled) == false)
+                                        {
+                                            <button type="button" onclick="cancelSubscription()" class="form-control">Cancel Subscription</button><br />
+                                        }
+                                        <span>Plan Name??:@ViewBag.PlanName</span><br />
+                                        <span>Interval:@ViewBag.PlanInterval</span><br />
+                                        <span>Amount:@ViewBag.PlanCost</span><br />
+                                        <span>Start Date:@ViewBag.SubscriptionStartDate</span><br />
+                                        <span>End Date:@ViewBag.SubscriptionEndDate</span><br />
+                                    }
+                                }
+                                @if (Convert.ToBoolean(ViewBag.IsCancelled) == true)
+                                {
+                                    <spn>Your had cancelled your Subscription plan at @ViewBag.SubscriptionCancelledOn UTC</spn>
+                                }
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+        var stripe = Stripe('@ViewBag.Publishkey');
+        var checkoutButton = document.getElementById('checkout-button');
+        checkoutButton.addEventListener('click', function () {
+            stripe.redirectToCheckout({
+                // Make the id field from the Checkout Session creation API response
+                // available to this file, so you can provide it as argument here
+                // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+                sessionId: '@ViewBag.sessionId'
+            }).then(function (result) {
+                debugger
+                // If `redirectToCheckout` fails due to a browser or network
+                // error, display the localized error message to your customer
+                // using `result.error.message`.
+            });
+        });
+
+    function cancelSubscription() {
+        var strconfirm = confirm("Are you sure you want to cancel subscription?");
+        if (strconfirm == true) {
+
+            $.ajax({
+                url: "/Admin/Setting/CancelSubscription",
+                method: "POST",
+                data: { 'subsid':'@ViewBag.SubscriptionId'},
+                beforeSend: function () {
+                    ajaxindicatorstart(returnLoadingText());
+                },
+                success: function (result) {
+                    ajaxindicatorstop();
+                    var location = '/Admin/Setting/Subscription';
+                    if (parseInt(result) === 1) {
+                        toastr.success("Subscription have been cancelled successfully !", "Success", { timeOut: 3000 });
+                        refreshPageCustom(location, 1000);
+                    }
+                    else {
+                        toastr.error("An error occured while cancelling subscription, please try again later", "Error", { timeOut: 3000 });
+                    }
+                },
+                error: function (jqXHR) {
+                    ajaxindicatorstop();
+                    toastr.error("An error occured while cancelling subscription, please try again later", "Error", { timeOut: 3000 });
+                }
+            });
+        }
+        return false;
+    }
+
+</script>
+

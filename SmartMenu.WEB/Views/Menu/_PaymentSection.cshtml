@@ -1,0 +1,72 @@
+﻿<div class="checkoutSec">
+    <h3>Choose An Option</h3>
+    <div class="row">
+        <div class="col-12 i-checks">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 mb-3">
+                    <label class="payOption"><input type="radio" id="optionsRadios1" name="pickupDeliveryOption" onchange="showHidePickUpDelivery('PickUp')" value="P" checked> PickUp</label>
+                </div>
+                <div class="col-lg-4 col-md-12 mb-3">
+                    <label class="payOption"><input type="radio" name="pickupDeliveryOption" id="optionsRadios1" onchange="showHidePickUpDelivery('Delivery')" value="D"> Delivery</label>
+                </div>
+            </div>
+        </div>
+        <div class="row" id="pickUpSection">
+            <form id="frmPickup" class="editPickUp">
+                <div class="row col-lg-12">
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Select Date</label>
+                        @if (ViewBag.PickUpDateArr.Count > 1)
+                        {
+                            <select class="form-control" name="pickupDateTime" id="pickupDateTime" onchange="getPickUpTime(this)">
+                                <option value="">Select</option>
+                                @foreach (var item in ViewBag.PickUpDateArr)
+                                {
+                                    <option value="@item.WeekDayId">@item.PickUpDate</option>
+                                }
+                            </select>
+                        }
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Select Time</label>
+                        <select class="form-control" name="pickupTime" id="pickupTime">
+                            <option value="">Select</option>
+                        </select>
+                    </div>
+                </div>               
+                <div class="col-lg-6 col-md-12 mb-3">
+                    <label>Address</label>
+                    @if (ViewBag.PickUpAddress != null && ViewBag.PickUpAddress.Count > 1)
+                    {
+                        for (int i = 0; i < ViewBag.PickUpAddress.Count; i++)
+                        {
+                            <label class="lastAddress">
+                                <input type="radio" id="pickupAddress" name="pickupAddress" @(i == 0 ? "checked" : "") value="@ViewBag.PickUpAddress[i]" />
+                                <p>@ViewBag.PickUpAddress[i]</p>
+                            </label>
+                        }
+                    }
+                </div>
+                <div class="col-lg-12">
+                    <button class="orderPlaceBtn" type="button" onclick="continuePickup()">Continue</button>
+                </div>
+            </form>
+            <div id="viewPickup" style="display:none">
+                <div class="col-lg-6 col-md-12 mb-3">
+                    <label>PickUp Date Time</label>
+                    <span id="pickUpdateTime"></span>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-3">
+                    <label>PickUp Address</label>
+                    <span class="selectedAddress"></span>
+                </div>
+                <div class="col-lg-12">
+                    <button class="orderPlaceBtn" type="button" onclick="editPickupDateTime()">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="paymentMethod">
+
+</div>

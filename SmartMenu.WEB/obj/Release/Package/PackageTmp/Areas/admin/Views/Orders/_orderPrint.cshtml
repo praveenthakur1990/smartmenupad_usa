@@ -1,0 +1,95 @@
+﻿@model SmartMenu.DAL.Models.OrderViewModel
+<div class="invoicePrint">
+    <div style="text-align:center; width:280px; padding:10px 10px">
+        <p style="font-size:14px; margin:0px 0px 10px 0px; font-weight: bold;">@ViewBag.billType</p>
+        <h1 style="font-size:16px; margin:6px 0px 0px 0px;">@ViewBag.RestaurantName</h1>
+        <p style="font-size:14px; margin:0px 0px 3px 0px;">@ViewBag.Address</p>
+        @if (Model.IsCustomerBillCopy == true)
+        {
+            <p style="font-size:14px; margin:0px 0px 5px 0px;">@ViewBag.RestaurantPhone</p>
+        }
+        <div style="border-bottom:1px solid #000000; padding:0px 0px 10px 0px; border-top: 1px solid #000000;">
+            <p style="text-align:left; font-size:13px; margin:10px 0px 5px 0px"><b>ORDER No:</b> @Model.OrderNo</p>
+            <p style="text-align:left; font-size:13px; margin:0px 0px 0px 0px"><b>ORDER DATE:</b> @Model.OrderedDate</p>
+            <p style="text-align:left; font-size:13px; margin:0px 0px 0px 0px"><b>PICKUP DATE:</b> @Model.PickUpDateTime</p>
+        </div>
+        @if (Model.IsCustomerBillCopy == true)
+        {
+            <div style="border-bottom:1px solid #000000; padding:0px 0px 10px 0px;">
+                <p style="text-align:left; font-size:13px; margin:10px 0px 3px 0px"><b>CUSTOMER DETAIL:</b></p>
+                <p style="text-align:left; font-size:13px; margin:0px 0px 3px 0px">@Model.CustomerName</p>
+                <p style="text-align:left; font-size:13px; margin:0px 0px 3px 0px">@Model.CustomerAddress</p>
+                <p style="text-align:left; font-size:13px; margin:0px 0px 0px 0px">@Model.MobileNumber</p>
+            </div>
+        }
+        <div>
+            <h2 style="text-align:left; font-size:15px; margin:20px 0px 0px 0px">Items:</h2>
+        </div>
+        <table style="width:100%; margin:10px 0px 0px 0px; border-collapse:collapse;">
+            <tbody>
+                @foreach (var item in Model.OrderedDetails)
+                {
+                    <tr>
+                        <td style="text-align: left; vertical-align: baseline; padding:0px 0px 20px 0px; width:10%;">
+                            <h3 style="font-size:14px; margin:0px 0px 0px 0px;">@(item.Qty)x</h3>
+                        </td>
+                        <td style="text-align: left; padding:0px 0px 20px 0px; width:65%;">
+                            <h3 style="font-size:14px; margin:0px 0px 0px 0px;">@item.Name</h3>
+                            @if (item.IsMultipleSize == true)
+                            {
+                                <p style="font-size:14px; margin:0px 0px 0px 2px;"><b>Sizes:</b> @item.ItemSizeList.Select(c => c.Name).FirstOrDefault()</p>
+                            }
+                            @if (item.AddOnsItemList != null && item.AddOnsItemList.Count() > 0)
+                            {
+                                foreach (var data in item.AddOnsItemList)
+                                {
+                                    <p style="font-size:14px; margin:0px 0px 0px 2px;"><b>@data.Title:</b> @String.Join(",", data.AddOnChoiceItems.Select(c => c.Name).ToList())</p>
+                                }
+                            }
+                        </td>
+                        <td style="text-align:right;font-size:14px;font-weight:bold; vertical-align:baseline; padding:0px 0px 20px 0px; width:25%;">@ViewBag.CurrencySymbol@(item.TotalAmount)</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <table style="width: 100%; margin: 0px 0px 30px 0px; font-size: 13px; font-weight: bold; border-collapse: collapse; border-top: 1px solid #000000">
+            <tbody>
+                @if (Model.SpecialInstruction != string.Empty)
+                {
+                    <tr>
+                        <td colspan="2" style="text-align: left; padding: 10px 0px 0px 0px;">Special Instruction:-</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: left; padding: 0px 0px 10px 0px;">@Model.SpecialInstruction</td>
+                    </tr>
+                }
+                <tr>
+                    <td colspan="2" style="text-align: left; padding: 10px 0px 0px 0px;">Sub-Total</td>
+                    <td style="text-align: right; padding: 10px 0px 0px 0px;">@ViewBag.CurrencySymbol@(Model.OrderedDetails.Sum(c=>c.TotalAmount))</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="text-align: left; padding: 10px 0px 0px 0px;">Sales Tax (@Model.TaxRate%)</td>
+                    <td style="text-align: right; padding: 10px 0px 0px 0px;">@String.Format("{0}{1}", ViewBag.CurrencySymbol, Model.TaxAmt)</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="text-align: left; padding: 10px 0px 0px 0px;">Delivery Fee</td>
+                    <td style="text-align: right; padding: 10px 0px 0px 0px;">@String.Format("{0}{1}", ViewBag.CurrencySymbol, Model.DeliveryCharges)</td>
+                </tr>
+
+                <tr>
+                    <td colspan="2" style="text-align: left; padding: 15px 0px 0px 0px; font-size: 16px;">Total Amount</td>
+                    <td style="text-align: right; padding: 15px 0px 0px 0px; font-size: 16px;">@ViewBag.CurrencySymbol@(Model.OrderedDetails.Sum(c=>c.TotalAmount)+ Model.TaxAmt+ Model.DeliveryCharges)</td>
+                </tr>
+            </tbody>
+        </table>
+        @if (Model.IsCustomerBillCopy == true)
+        {
+            <p>
+                <b>Thanks for your purchase!</b>
+                <br>smartmenupad.com
+            </p>
+        }
+    </div>
+</div>

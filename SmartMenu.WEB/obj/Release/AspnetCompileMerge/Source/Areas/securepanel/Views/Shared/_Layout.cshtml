@@ -1,0 +1,133 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Content/theme/css/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="https://file.myfontastic.com/f7zBVoJyMDgeHqmawHmrNG/icons.css" rel="stylesheet">*@
+    <link href="~/Content/theme/css/animate.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/style.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/toastr.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/dataTables/datatables.min.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/iCheck/custom.css" rel="stylesheet" />
+    <link href="~/Content/theme/plugins/datapicker/datepicker3.css" rel="stylesheet" />
+    <!--..google font..-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    @{
+        var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+        var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+    }
+    <div id="wrapper">
+        <nav class="navbar-default navbar-static-side sidenav" role="navigation">
+            <div class="sidebar-collapse">
+                <ul class="nav metismenu sideNavList" id="side-menu">
+                    <li class="nav-header">
+                        <div class="dropdown profile-element">
+                            <span>
+                                <img alt="image" class="img-circle" src="@Url.Content("~/Content/img/profile_small.jpg")" />
+                            </span>
+                            <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                                <span class="clear">
+                                    <span class="block m-t-xs">
+                                        <strong class="font-bold">@SmartMenu.WEB.Helpers.SessionManager.LoginResponse.UserName</strong>
+                                    </span>
+                                    <span class="text-xs block">@SmartMenu.WEB.Helpers.SessionManager.LoginResponse.RoleName <b class="caret"></b></span>
+                                </span>
+                            </a>
+                            <ul class="dropdown-menu fadeInRight m-t-xs">
+                                <li><a href="#">Profile</a></li>
+                                <li class="divider"></li>
+                                <li><a href="javascript:void();" onclick="logout()">Logout</a></li>
+                            </ul>
+                        </div>
+                        <div class="logo-element">
+                            IN+
+                        </div>
+                    </li>
+                    <li class="@(controllerName=="Home"? "active":"")">
+                        <a href="@Url.Action("Index","Home",new {area="securepanel" })">
+                            <i class="sm-dashbaord"></i> <span class="nav-label">Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="@(controllerName=="Restaurant" ? "active":"")">
+                        <a href="@Url.Action("Index","Restaurant",new {area="securepanel" })">
+                            <i class="sm-fine-dining"></i> <span class="nav-label">Resturant's</span>
+                        </a>
+                    </li>
+
+                    @if (SmartMenu.WEB.Helpers.SessionManager.LoginResponse != null && SmartMenu.WEB.Helpers.SessionManager.LoginResponse.RoleName == "SuperAdmin")
+                    {
+                        <li class="@(controllerName=="Partners" ? "active":"")">
+                            <a href="@Url.Action("Index","Partners",new {area="securepanel" })">
+                                <i class="sm-fine-dining"></i> <span class="nav-label">Partner's</span>
+                            </a>
+                        </li>
+                        <li class="@(controllerName=="Plan" ? "active":"")">
+                            <a href="@Url.Action("Index","Plan",new {area="securepanel" })">
+                                <i class="sm-fine-dining"></i> <span class="nav-label">Plan</span>
+                            </a>
+                        </li>
+
+
+                        <li class="@(controllerName=="Home" && actionName=="RequestForDemoList" ? "active":"")">
+                            <a href="@Url.Action("RequestForDemoList","Home",new {area="securepanel" })">
+                                <i class="sm-fine-dining"></i> <span class="nav-label">Demo Request</span>
+                            </a>
+                        </li>
+
+                        <li class="@(controllerName=="Home" && actionName=="TalkToExpertList" ? "active":"")">
+                            <a href="@Url.Action("TalkToExpertList","Home",new {area="securepanel" })">
+                                <i class="sm-fine-dining"></i> <span class="nav-label">Expert Request</span>
+                            </a>
+                        </li>
+
+                        <li class="@(controllerName=="Home" && actionName=="NewsLetterSubscriberList" ? "active":"")">
+                            <a href="@Url.Action("NewsLetterSubscriberList","Home",new {area="securepanel" })">
+                                <i class="sm-fine-dining"></i> <span class="nav-label">NewsLetter Request</span>
+                            </a>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </nav>
+        <div id="page-wrapper" class="gray-bg">
+            <div class="row border-bottom">
+                <nav class="navbar navbar-static-top white-bg" role="navigation" style="margin-bottom: 0">
+                    <div class="navbar-header">
+                        <a class="navbar-minimalize minimalize-styl-2" href="#"><i style="font-size: 23px; color: #000000;" class="sm-menu"></i> </a>
+                        <!--<form role="search" class="navbar-form-custom" action="search_results.html">
+                            <div class="form-group">
+                                <input type="text" placeholder="Search for something..." class="form-control" name="top-search" id="top-search">
+                            </div>
+                        </form>-->
+                    </div>
+                </nav>
+            </div>
+            <div class="wrapper wrapper-content">
+                @RenderBody()
+            </div>
+        </div>
+    </div>
+    <!-- Mainly scripts -->
+    <script src="~/Content/theme/js/jquery-2.1.1.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Content/theme/js/bootstrap.min.js"></script>
+    <script src="~/Content/theme/plugins/metisMenu/jquery.metisMenu.js"></script>
+    <script src="~/Content/theme/plugins/slimscroll/jquery.slimscroll.min.js"></script>
+    <!-- Custom and plugin javascript -->
+    <script src="~/Content/theme/js/inspinia.js"></script>
+    <script src="~/Content/theme/js/toastr.js"></script>
+    <script src="~/Content/theme/plugins/dataTables/datatables.min.js"></script>
+    <script src="~/Content/theme/plugins/iCheck/icheck.min.js"></script>
+    <script src="~/Content/theme/js/jquery-input-mask-phone-number.js"></script>
+    <script src="~/Content/theme/plugins/datapicker/bootstrap-datepicker.js"></script>
+    <script src="~/Content/theme/plugins/bootstrap-switch/bootstrap-switch.min.js"></script>
+    <script src="~/Content/project/js/common.js"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SmartMenu.DAL.Models.TenantsVM>
+@{
+    ViewBag.Title = "Restaurant List";
+    Layout = "~/Areas/securepanel/Views/Shared/_Layout.cshtml";
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row pageTitle">
+            <div class="col-lg-6">
+                <h1>Restaurant List</h1>
+            </div>
+            <div class="col-lg-6 text-right">
+                <button class="btn btn-primary" onclick="window.location.href='@Url.Action("AddUpdateRestaurant","Restaurant",new {area="securepanel" })'"><i class="sm-add"></i>Add New</button>
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="table-responsive">
+                <table class="table table-hover dataTables-example">
+                    <thead>
+                        <tr>
+                            <th>Email</th>
+                            <th>UserId</th>
+                            <th>Added By (RoleName)</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr class="gradeA">
+                                    <td>@item.TenantName</td>
+                                    <td>@item.UserId</td>
+                                    <td>@item.AddedByName (@item.RoleName)</td>
+                                    <td class="center">
+                                        <a href="@Url.Action("AddUpdateRestaurant","Restaurant",new {area="SecurePanel",userId=item.UserId })" class="editButon"><i class="fa fa-edit"></i>Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="4">
+                                    <div class="alert alert-danger text-center" role="alert">
+                                        No data found
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

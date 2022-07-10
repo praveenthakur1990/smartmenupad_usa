@@ -1,0 +1,133 @@
+﻿@model SmartMenu.DAL.Models.MenuDataModel
+@{
+    ViewBag.title = "Payment Response";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+
+<div class="container">
+    @if (Model.RestaurantModel != null)
+    {
+        <div class="sucessPaymentWrapper">
+            <div class="row">
+                <div class="col-12 text-center paymentSucessImage p-3">
+                    <img src="@Url.Content("~/Content/menu/img/sucess.svg")" alt="sucess Image" />
+                    <h3>We've recevied your payment & order successful</h3>
+                    <p>Order No. @Model.OrderInfo.OrderNo <span>@Model.OrderInfo.OrderedDate</span></p>
+                </div><!--order status-->
+                <div class="col-12 mt-5 mb-3 orderInvoiceDetail">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12 mb-3">
+                            <h3>Resturant Details</h3>
+                            <p>@Model.RestaurantModel.Name</p>
+                            <p><b>Address:</b> @Model.RestaurantModel.Address, @Model.RestaurantModel.State, @Model.RestaurantModel.ZipCode</p>
+                            <p><b>Mobile:</b> @Model.RestaurantModel.Mobile</p>
+                        </div>
+                        <div class="col-lg-6 col-md-12 mb-3">
+                            @if (Model.OrderInfo.OrderedType == "P")
+                            {
+                                <h3>PickUp Details</h3>
+                            }
+                            else
+                            {
+                                <h3>Delivery Details</h3>
+                            }
+                            <p><b>Name:</b> @Model.OrderInfo.CustomerName</p>
+                            <p><b>Address:</b>@Model.OrderInfo.CustomerAddress</p>
+                            <p><b>Mobile:</b> @Model.OrderInfo.MobileNumber</p>
+                            @if (Model.OrderInfo.OrderedType == "P")
+                            {
+                                <p><b>PickUp Address:</b> @Model.OrderInfo.PickUpAddress</p>
+                                <p><b>PickUp DateTime:</b> @Model.OrderInfo.PickUpDateTime</p>
+
+                            }
+
+                        </div>
+                    </div>
+                </div><!--order detail-->
+                <div class="col-12 orderListInvoice">
+                    <div class="row orderListHeading border-bottom">
+                        <div class="col-6"><b>Item Name</b></div>
+                        <div class="col-2"><b>Price</b></div>
+                        <div class="col-2"><b>Quantity</b></div>
+                        <div class="col-2 text-end"><b>Amount</b></div>
+                    </div>
+                    @foreach (var item in Model.OrderInfo.OrderedDetails)
+                    {
+                        decimal _addOnPrice = 0;
+                        <div class="row mt-3 mb-3 orderItemList">
+                            <div class="col-6">
+                                <p>@item.Name</p>
+                                @if (item.IsMultipleSize == true)
+                                {
+                                    <span>Size:-@item.ItemSizeList.Select(c => c.Name).FirstOrDefault()</span>
+                                }
+                                @if (item.AddOnsItemList != null && item.AddOnsItemList.Count() > 0)
+                                {
+                                    for (int i = 0; i < item.AddOnsItemList.Count(); i++)
+                                    {
+                                        _addOnPrice += item.AddOnsItemList[i].AddOnChoiceItems.Select(c => c.Price).Sum();
+                                        <span>@item.AddOnsItemList[i].Title:-@String.Join(",", item.AddOnsItemList[i].AddOnChoiceItems.Select(c => c.Name).ToList())</span><br />
+                                    }
+                                }
+                            </div>
+                            <div class="col-2">
+                                @ViewBag.CurrencySymbol@(item.IsMultipleSize==true ? item.ItemSizeList.Select(c=>c.Price).FirstOrDefault():item.Price+_addOnPrice)
+                            </div>
+                            <div class="col-2">@item.Qty</div>
+                            <div class="col-2 text-end">@ViewBag.CurrencySymbol@item.TotalAmount</div>
+                        </div>
+                    }
+                </div><!--order item list-->
+                <div class="col-12">
+                    <div class="row mt-2 mb-2 orderItemList border-top pt-3">
+                        <div class="col-lg-6">
+                            @if (Model.OrderInfo.SpecialInstruction != string.Empty)
+                            {
+                                <div>Special Instruction:- @Model.OrderInfo.SpecialInstruction</div>
+
+                            }
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="row mt-2 mb-2 orderItemList">
+                                <div class="col-2 offset-8">Sub-Total</div>
+                                <div class="col-2 text-end">@ViewBag.CurrencySymbol@Model.OrderInfo.OrderedDetails.Select(c => c.TotalAmount).Sum()</div>
+                            </div>
+                            <div class="row mt-2 mb-2 orderItemList">
+                                <div class="col-2 offset-8">Tax Charges (@Model.OrderInfo.TaxRate%)</div>
+                                <div class="col-2 text-end">@String.Format("{0}{1}", ViewBag.CurrencySymbol, String.Format("{0:0.00}", Model.OrderInfo.TaxAmt.ToString()))</div>
+                            </div>
+                            <div class="row mt-2 mb-2 orderItemList">
+                                <div class="col-2 offset-8">Delivery Charges</div>
+                                <div class="col-2 text-end">@String.Format("{0}{1}", ViewBag.CurrencySymbol, String.Format("{0:0.00}", Model.OrderInfo.DeliveryCharges.ToString()))</div>
+                            </div>
+                            @*<div class="row mt-2 mb-2 orderItemList">
+                                    <div class="col-2 offset-8">Discount</div>
+                                    <div class="col-2 text-end">@String.Format("{0}{1}", ViewBag.CurrencySymbol, "0.00")</div>
+                                </div>*@
+                            <div class="row mt-3 mb-2 orderTotalAmount border-top border-bottom pt-3 pb-3">
+                                <div class="col-2 offset-8"><b>Total Amount</b></div>
+                                <div class="col-2 text-end"><b>@ViewBag.CurrencySymbol@(Model.OrderInfo.OrderedDetails.Select(c => c.TotalAmount).Sum() + Model.OrderInfo.TaxAmt+ Model.OrderInfo.DeliveryCharges)</b></div>
+                            </div>
+                        </div>
+                    </div>
+                </div><!--Order Amount Detail-->
+                <div class="col-12 text-center mb-4 pt-5 invoiceFooter">
+                    <h3>For More details contact</h3>
+                    <h4>@Model.RestaurantModel.Name</h4>
+                    <p>@Model.RestaurantModel.Address @Model.RestaurantModel.ZipCode</p>
+                    <p class="pt-2">
+                        <span class="me-3"><b>Mobile:</b> @Model.RestaurantModel.Mobile</span>
+                        <span><b>Email:</b> @Model.RestaurantModel.Email</span>
+                    </p>
+                    @*<p class="pt-3">Track your order <a href="#" target="_black">https://mexicocitynj.com/</a></p>*@
+                </div><!--invoice footer-->
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger" role="alert">
+            Some thing went wrong..Please contact the site adminstrator.
+        </div>
+    }
+</div>

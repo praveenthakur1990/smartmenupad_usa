@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+@font-face {
+  font-family: "cb-icon";
+  src:url("../fonts/cb-icon.eot");
+  src:url("../fonts/cb-icon.eot?#iefix") format("embedded-opentype"),
+    url("../fonts/cb-icon.woff") format("woff"),
+    url("../fonts/cb-icon.ttf") format("truetype"),
+    url("../fonts/cb-icon.svg#cb-icon") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+[data-icon]:before {
+  font-family: "cb-icon" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="smp-"]:before,
+[class*=" smp-"]:before {
+  font-family: "cb-icon" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.smp-bin:before {
+  content: "\61";
+}
+.smp-dashboard:before {
+  content: "\62";
+}
+.smp-facebook:before {
+  content: "\63";
+}
+.smp-faqs:before {
+  content: "\64";
+}
+.smp-help-desk:before {
+  content: "\65";
+}
+.smp-instagram:before {
+  content: "\66";
+}
+.smp-list:before {
+  content: "\67";
+}
+.smp-next:before {
+  content: "\68";
+}
+.smp-photo:before {
+  content: "\69";
+}
+.smp-plus:before {
+  content: "\6a";
+}
+.smp-purchase:before {
+  content: "\6b";
+}
+.smp-reports:before {
+  content: "\6c";
+}
+.smp-sales:before {
+  content: "\6d";
+}
+.smp-search:before {
+  content: "\6e";
+}
+.smp-settings:before {
+  content: "\6f";
+}
+.smp-twitter:before {
+  content: "\70";
+}
+.smp-upload:before {
+  content: "\71";
+}
+.smp-upload-1:before {
+  content: "\72";
+}

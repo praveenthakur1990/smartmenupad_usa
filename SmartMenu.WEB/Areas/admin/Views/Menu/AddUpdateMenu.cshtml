@@ -1,0 +1,416 @@
+﻿@model SmartMenu.DAL.Models.MenuItemViewModel
+@{
+    ViewBag.Title = "Menu";
+    Layout = "~/Areas/admin/Views/Shared/_LayoutAdminPanel.cshtml";
+}
+
+@section scripts{
+   
+    <link href="~/Content/theme/css/multiSelect.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/jquery-weekdays.css" rel="stylesheet" />
+    <script src="~/Content/theme/js/jquery-weekdays.js"></script>
+    <script src="~/Content/project/js/admin/menu.js"></script>
+
+    <script src="~/Content/theme/js/mutiSelect.js"></script>
+}
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row pageTitle">
+            <div class="col-lg-12">
+                <h1>@(Model.Id > 0 ? "Edit":"Add New") Menu Item </h1>
+                <p>Please fill all the required fields<span style="color:red">(*)</span></p>
+            </div>
+        </div>
+        <div class="ibox-content wrapperPadding">
+            <form id="frmAddUpdateMenu" class="form-horizontal">
+                @Html.HiddenFor(c => c.Id)
+                <input type="hidden" id="hdnRecommendationItem" value="@Model.RecommendedItems" />
+                <input type="hidden" id="hdnSelectedDays" value="@Model.SelectedDays" />
+                <input type="hidden" id="hdnSeasonalMonth" value="@Model.SeasonalMonth" />
+                <input type="hidden" id="hdnImagePath" value="@Model.ImagePath" />
+                <input type="hidden" id="hdnVideoPath" value="@Model.VideoPath" />
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Menu Basic Details</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <label>Item Name</label>
+                                <input type="text" class="form-control" id="name" name="name" maxlength="50" autocomplete="off" value="@Model.Name" placeholder="(e.g. Garlic Butter Shrimp Pasta)" />
+                            </div>
+                            <div class="col-lg-4">
+                                <label>Category</label>
+                                @Html.DropDownListFor(c => c.CategoryId, (SelectList)ViewBag.Categories, null, new { @class = "form-control" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--Mutiple Size section-->
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Do you have multiple sizes for this item?</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="customRadio">
+                                    <input type="radio" value="true" id="IsMultipleSizeItem" name="IsMultipleSizeItem" @(Model.IsMultipleSize == true ? "checked" : "") onchange="setIsMutipleSizeItem(this)"> <span>Yes</span>
+                                </label>
+                                <label class="customRadio">
+                                    <input type="radio" value="false" id="IsMultipleSizeItem" name="IsMultipleSizeItem" @(Model.IsMultipleSize == false ? "checked" : "") onchange="setIsMutipleSizeItem(this)"><span>No</span>
+                                </label>
+                            </div>
+                            <div class="col-lg-8">
+                                <div style="display:@(Model.IsMultipleSize==true ? "block":"none")" id="mutipleSizeDiv">
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <div class="addChoicesSec">
+                                                <table class="table table-responsive" id="tblMultipleSizes">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Name</th>
+                                                            <th colspan="2">Price</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @if (Model.MenuMultipleSizesList != null && Model.MenuMultipleSizesList.Count() > 0)
+                                                        {
+                                                            foreach (var item in Model.MenuMultipleSizesList)
+                                                            {
+                                                                <tr>
+                                                                    <td>
+                                                                        <input type="text" class="tdInput validate" name="name_0" maxlength="50" value="@item.Name" autocomplete="off" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" class="tdInput numbers-only" name="price_0" maxlength="20" value="@item.Price" autocomplete="off" />
+                                                                    </td>
+                                                                    <td>
+                                                                        <a href="javascript:void(0);" class="deleteRow editBtn" onclick="removeMultipleSizeRow(this)"><i class="sm-delete"></i> Delete</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" class="tdInput validate" name="name_0" maxlength="50" autocomplete="off" />
+                                                                </td>
+                                                                <td>
+                                                                    <input type="text" class="tdInput numbers-only validate" name="price_0" maxlength="20" autocomplete="off" />
+                                                                </td>
+                                                                <td>&nbsp;</td>
+                                                            </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                                <div class="col-lg-12">
+                                                    <button id="btnAddMore" type="button" data-content="@Model.MenuMultipleSizesList.Count()" class="addOptionSetBtn" onclick="addMoreSizes(this)">(+) Add More Sizes</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 colMarginTop" id="SingleSizeDiv" style="display:@(Model.IsMultipleSize==false ? "block":"none")">
+                                        <label>Item Price</label>
+                                        <input class="form-control numbers-only" id="price" name="price" value="@Model.Price" autocomplete="off" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End muultiple Size section-->
+                <!--AddOns/Choices section-->
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Would you like Addons/ Choices?</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <label class="customRadio">
+                                    <input type="radio" value="true" id="IsAddOnsChoices" name="IsAddOnsChoices" @(Model.IsAddOnsChoices == true ? "checked" : "") onchange="setIsAddOnsChoicesItem(this)"><span>Yes</span>
+                                </label>
+                                <label class="customRadio">
+                                    <input type="radio" value="false" id="IsAddOnsChoices" name="IsAddOnsChoices" @(Model.IsAddOnsChoices == false ? "checked" : "") onchange="setIsAddOnsChoicesItem(this)"><span>No</span>
+                                </label>
+                            </div>
+                            <div class="col-lg-8">
+                                <div style="display:@(Model.IsAddOnsChoices==true ? "block":"none")" id="AddonsChoicesDiv">
+                                    <button type="button" data-content="@(Model.MenuAddOnsChoicesList!= null && Model.MenuAddOnsChoicesList.Count() > 0 ? Model.MenuAddOnsChoicesList.Count() :0)" class="btn btn-primary" onclick="addMoreAddOns(this)">Add More Addons/ Choices Set</button>
+                                    <div class="copyDiv">
+                                        @if (Model.MenuAddOnsChoicesList != null && Model.MenuAddOnsChoicesList.Count() > 0)
+                                        {
+                                            for (int i = 0; i < Model.MenuAddOnsChoicesList.Count(); i++)
+                                            {
+                                                <div class="addChoicesSec" id="addon_@i">
+                                                    <table class="table table-responsive" id="tblAddOnsChoices_@i">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Title</th>
+                                                                <th>Is Required</th>
+                                                                <th>Min</th>
+                                                                <th>Max</th>
+                                                                <th></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            <tr>
+                                                                <td>
+                                                                    <input type="text" name="title_@i" class="form-control validate" placeholder="Title" maxlength="50" autocomplete="off" value="@Model.MenuAddOnsChoicesList[i].Title" />
+                                                                </td>
+                                                                <td>
+                                                                    <select class="form-control validate" name="IsRequired_addon_@i" onchange="showMinMax(this)">
+                                                                        <option value="">Select</option>
+                                                                        <option value="true" @(Model.MenuAddOnsChoicesList[i].IsRequired == true ? "selected" : "")>Yes</option>
+                                                                        <option value="false" @(Model.MenuAddOnsChoicesList[i].IsRequired == false ? "selected" : "")>No</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td class="showHideMaxMin">
+                                                                    <input type="text" name="min_@i" class="form-control validate onlynumbers" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" placeholder="Min" maxlength="2" autocomplete="off" value="@Model.MenuAddOnsChoicesList[i].Min" />
+                                                                </td>
+                                                                <td class="showHideMaxMin">
+                                                                    <input type="text" name="max_@i" class="form-control validate onlynumbers" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" placeholder="Max" maxlength="2" autocomplete="off" value="@Model.MenuAddOnsChoicesList[i].Max" />
+                                                                </td>
+                                                                <td class="text-center"><a href="javascript:void(0);" class="deleteRow" onclick="removeAddOnsChoicesRow(this)"><i class="sm-delete"></i></a></td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="row" id="AddonsChoicesItemDiv_@i" style="display:@(Model.IsAddOnsChoices == true ? "block" : "none")">
+                                                        <div class="col-lg-12">
+                                                            <table class="table table-responsive" id="tblAddOnsChoicesItem_@i">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>Name</th>
+                                                                        <th>Price</th>
+                                                                        <th class="text-center">Action</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @if (Model.MenuAddOnsChoicesList[i].AddOnChoiceItems != null && Model.MenuAddOnsChoicesList[i].AddOnChoiceItems.Count() > 0)
+                                                                    {
+                                                                        for (int j = 0; j < Model.MenuAddOnsChoicesList[i].AddOnChoiceItems.Count(); j++)
+                                                                        {
+                                                                            <tr>
+                                                                                <td>
+                                                                                    <input type="text" class="form-control validate" name="CustomizationItem_@(i.ToString()+"_"+j.ToString())" maxlength="200" autocomplete="off" value="@Model.MenuAddOnsChoicesList[i].AddOnChoiceItems[j].Name" />
+                                                                                </td>
+                                                                                <td>
+                                                                                    <input type="text" class="form-control numbers-only validate" name="CustomizationItemPrice_@(i.ToString()+"_"+j.ToString())" maxlength="20" autocomplete="off" value="@Model.MenuAddOnsChoicesList[i].AddOnChoiceItems[j].Price" />
+                                                                                </td>
+                                                                                <td class="text-center">
+                                                                                    <a href="javascript:void(0);" class="deleteRow" onclick="removeAddOnsItemRow(this)"><i class="sm-delete"></i></a>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                    }
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-lg-12">
+                                                        <button type="button" class="addOptionSetBtn" onclick="addMoreAddOnsItem(@i)">(+) Add Options</button>
+                                                    </div>
+                                                </div>
+                                            }
+                                        }
+                                        else
+                                        {
+                                            <div class="addChoicesSec" id="addon_0">
+                                                <table class="table table-responsive" id="tblAddOnsChoices_0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Title</th>
+                                                            <th>Is Required</th>
+                                                            <th>Min</th>
+                                                            <th>Max</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>
+                                                                <input type="text" name="title_0" class="form-control validate" placeholder="Title" maxlength="50" autocomplete="off" value="" />
+                                                            </td>
+                                                            <td>
+                                                                <select class="form-control validate" name="IsRequired_addon_0" onchange="showMinMax(this)">
+                                                                    <option value="">Select</option>
+                                                                    <option value="true">Yes</option>
+                                                                    <option value="false">No</option>
+                                                                </select>
+                                                            </td>
+                                                            <td class="showHideMaxMin">
+                                                                <input type="text" name="min_0" class="form-control validate onlynumbers" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" placeholder="Min" maxlength="2" autocomplete="off" value="" />
+                                                            </td>
+                                                            <td class="showHideMaxMin">
+                                                                <input type="text" name="max_0" class="form-control validate onlynumbers" onkeyup="if (/\D/g.test(this.value)) this.value = this.value.replace(/\D/g,'')" placeholder="Max" maxlength="2" autocomplete="off" value="" />
+                                                            </td>
+                                                            <td></td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                                <div class="row" id="AddonsChoicesItemDiv_0" style="display:none">
+                                                    <div class="col-lg-12">
+                                                        <table class="table table-responsive" id="tblAddOnsChoicesItem_0">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th>Name</th>
+                                                                    <th>Price</th>
+                                                                    <th class="text-center">Action</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                            </tbody>
+                                                        </table>
+                                                    </div>
+                                                </div>
+                                                <div class="col-lg-12">
+                                                    <button type="button" class="addOptionSetBtn" onclick="addMoreAddOnsItem(0)">(+) Add Options</button>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--End AddOns/Choices section-->
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Description</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <textarea class="form-control" placeholder="Enter item description" id="description" name="description" autocomplete="off" maxlength="250">@Model.Description</textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Menu Image</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="upload-btn-wrapper">
+                                    <button class="uploadBtn">Upload item image</button>
+                                    <input type="file" id="imagePath" name="imagePath" onchange="readImage(this)" />
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="preview-image-FSSAI upload-btn-wrapper" style="border: none !important; display:@(Model.ImagePath!=null && Model.ImagePath!=string.Empty ? "block":"none")">
+                                    <a id="linkUploadFilePath" href="@(Model.ImagePath!=null && Model.ImagePath!=string.Empty ? Model.ImagePath:"")" target="_blank">
+                                        <img src="@Model.ImagePath" alt="image" />
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row colMarginBottom">
+                    <div class="col-lg-3">
+                        <h2 class="formHeading">Menu Other Details</h2>
+                    </div>
+                    <div class="col-lg-9">
+                        <div class="row">
+                            <div class="col-lg-8">
+                                <div class="row colMarginBottom">
+                                    <div class="col-lg-6">
+                                        <label>Mark Item as New</label>
+                                        <select class="form-control" id="itemAs" name="itemAs">
+                                            <option value="">Select</option>
+                                            <option value="New" @(Model.ItemAs == "New" ? "selected" : "")>New</option>
+                                            <option value="Featured" @(Model.ItemAs == "Featured" ? "selected" : "")>Featured</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label>Veg/NonVeg</label>
+                                        <select class="form-control" id="VegNonVeg" name="VegNonVeg">
+                                            <option value="">Select</option>
+                                            <option value="Veg" @(Model.VegNonVeg == "Veg" ? "selected" : "")>Veg</option>
+                                            <option value="Non-Veg" @(Model.VegNonVeg == "Non-Veg" ? "selected" : "")>Non-Veg</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row colMarginBottom">
+                                    <div class="col-lg-12">
+                                        <label>Is this menu item seasonal?</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label class="customRadio">
+                                            <input type="radio" value="true" id="IsSeasonalItem" name="IsSeasonalItem" @(Model.IsSeasonal == true ? "checked" : "") onchange="setIsSeasonalItem(this)"> <span>Yes</span>
+                                        </label>
+                                        <label class="customRadio">
+                                            <input type="radio" value="false" id="IsSeasonalItem" name="IsSeasonalItem" @(Model.IsSeasonal == false ? "checked" : "") onchange="setIsSeasonalItem(this)"><span>No</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12" id="SeasonalItemDiv" style="display:@(Model.IsSeasonal==true ? "block":"none")">
+                                        <label>Select Month</label>
+                                        <select name="SeasonalMonth" id="SeasonalMonth" class="form-control multiselect-ui" multiple="multiple">
+                                            <option value="Jan">Jan</option>
+                                            <option value="Feb">Feb</option>
+                                            <option value="Mar">Mar</option>
+                                            <option value="Apr">Apr</option>
+                                            <option value="May">May</option>
+                                            <option value="Jun">Jun</option>
+                                            <option value="Jul">July</option>
+                                            <option value="Aug">Aug</option>
+                                            <option value="Sep">Sep</option>
+                                            <option value="Oct">Oct</option>
+                                            <option value="Nov">Nov</option>
+                                            <option value="Dec">Dec</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row colMarginBottom">
+                                    <div class="col-lg-12">
+                                        <label>Do you want to publish this item for selected days?</label>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <label class="customRadio">
+                                            <input type="radio" value="true" id="IsSelectedDays" name="IsSelectedDays" @(Model.IsOnSelectedDays == true ? "checked" : "") onchange="setIsOnSelectedDaysItem(this)"> <span>Yes</span>
+                                        </label>
+                                        <label class="customRadio">
+                                            <input type="radio" value="false" id="IsSelectedDays" name="IsSelectedDays" @(Model.IsOnSelectedDays == false ? "checked" : "") onchange="setIsOnSelectedDaysItem(this)"><span>No</span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12" id="SelectedDaysDiv" style="display:@(Model.IsSeasonal==true ? "block":"none")">
+                                        <label>Select Days</label>
+                                        <div id="weekdays"></div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <label>Do you want this menu item published?</label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <input type="checkbox" name="IsPublish" value="@Model.IsPublish" class="switch" @(Model.IsPublish == true ? "Checked" : "") />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-9 col-lg-offset-3">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button class="submitBtn" type="button" onclick="addUpdateMenu();">Save Now</button>
+                            </div>
+                        </div>
+                    </div>
+                    @*<div class="col-lg-4 colMargin">
+                            <label>Recommended Items</label>
+                            @Html.DropDownListFor(c => c.RecommendedItems, (SelectList)ViewBag.RecommeddationItem, null, new { @class = "form-control multiselect-ui", multiple = "multiple" })
+                        </div>*@
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

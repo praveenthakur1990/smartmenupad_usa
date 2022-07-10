@@ -1,0 +1,60 @@
+﻿@model IEnumerable<SmartMenu.DAL.Models.RequestDemoModel>
+@{
+    ViewBag.Title = "RequestForDemoList";
+    Layout = "~/Areas/securepanel/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="row pageTitle">
+            <div class="col-lg-6">
+                <h5>Request For Demo Request List</h5>
+            </div>
+            <div class="col-lg-6 text-right">
+            </div>
+        </div>
+        <div class="ibox-content">
+            <div class="table-responsive">
+                <table class="table table-hover dataTables-example">
+                    <thead>
+                        <tr>
+                            <th>FullName</th>
+                            <th>Email Address</th>
+                            <th>Phone Number</th>
+                            <th>Restaurant Name</th>
+                            <th>No. Of Location</th>
+                            <th>Request Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.Count() > 0)
+                        {
+                            foreach (var item in Model)
+                            {
+                                <tr class="gradeA">
+                                    <td>@item.FullName</td>
+                                    <td>@item.EmailAddress</td>
+                                    <td>@item.PhoneNumber</td>
+                                    <td>@item.RestaurantName</td>
+                                    <td>@item.NoOfLocation</td>
+                                    <td>@item.CreatedDate</td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6">
+                                    <div class="alert alert-danger text-center" role="alert">
+                                        No data found
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+

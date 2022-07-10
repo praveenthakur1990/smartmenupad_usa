@@ -1,0 +1,205 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="" />
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors" />
+    <meta name="generator" content="Hugo 0.79.0" />
+    <title>@ViewBag.title</title>
+    <!--Bootstrap CSS -->
+    <link href="~/Content/menu/css/style.css" rel="stylesheet" />
+    <link href="~/Content/menu/css/fonts.css" rel="stylesheet" />
+    <link href="~/Content/menu/css/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/theme/css/toastr.css" rel="stylesheet" />
+    <!--font-css-->
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <!--font-icons-css-->
+    @*<link href="https://file.myfontastic.com/f7zBVoJyMDgeHqmawHmrNG/icons.css" rel="stylesheet">*@
+    <link href="https://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/css/bootstrap-datetimepicker.css" rel="stylesheet">
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+@{
+    var controllerName = this.ViewContext.RouteData.Values["controller"].ToString();
+    var actionName = this.ViewContext.RouteData.Values["action"].ToString();
+}
+<body id="OnlineOffline" data-backdrop="@controllerName @actionName" data-spy="scroll" data-target=".menuTabMenu" data-offset="65" data-bind="@(actionName=="TrackOrder" ?"" :ViewBag.IsClosed)">
+    <input type="hidden" id="txtPickUpStartDateTime" value="@ViewBag.PickUpStartDateTime" />
+    <input type="hidden" id="txtPickUpEndDateTime" value="@ViewBag.PickUpEndDateTime" />
+    <input type="hidden" id="hdnMode" value="@ViewBag.mode" />
+    <input type="hidden" id="hdnSuccess" value="@TempData["Success"]" />
+    <input type="hidden" id="hdnCurrencySymbol" value="@ViewBag.CurrencySymbol" />
+    <header class="headerBg">
+        <div class="bannerImage" style="background-image:@ViewBag.BannerImg !important"></div>
+        <div class="container">
+            <div class="row header-Content">
+                <div class="col-lg-3">
+                    <div class="mainLogoBg">
+                        <img src="@Model.RestaurantModel.LogoPath" alt="logo" title="restaurant Logo" class="mb-2" />
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="px-2 pt-2">
+                        <h1>@Model.RestaurantModel.Name</h1>
+                        <p>@Model.RestaurantModel.Address</p>
+                        @if (@Model.RestaurantModel.BusinessHours.IsClosed == true)
+                        {
+                            <p><b>Hours:</b> Closed</p>
+                        }
+                        else
+                        {
+                            <p><b>Hours:</b> @Model.RestaurantModel.BusinessHours.OpenTime12Hour-@Model.RestaurantModel.BusinessHours.CloseTime12Hour (Today)</p>
+                        }
+                    </div>
+                </div>
+                @if (ViewBag.IsShowCustomButton == true)
+                {
+                    <div class="col-lg-3">
+                        <a href="@ViewBag.UrlText" target="_blank" class="specialButton">@ViewBag.LabelText</a>
+                    </div>
+                }
+            </div>
+        </div>
+    </header>
+    <main>
+        @RenderBody()
+    </main>
+    <footer class="footerBg mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+                    <h3>About Restaurant</h3>
+                    <p>@Model.RestaurantModel.Address</p>
+                    <p>Call: @ViewBag.CountryMobileCode-@Model.RestaurantModel.Mobile</p>
+                    <p>Email: @Model.RestaurantModel.Email</p>
+                    @if (ViewBag.socialMediaLinks != null && ViewBag.socialMediaLinks.Count > 0)
+                    {
+                        <p>
+                            @foreach (var item in ViewBag.socialMediaLinks)
+                            {
+                                <span><a href="@item.Link" target="_blank"><i class="@item.Icon"></i></a></span>
+                            }
+                        </p>
+                    }
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+                    @if (ViewBag.quickLinks != null && ViewBag.quickLinks.Count > 0)
+                    {
+                        <h3>Quick Link</h3>
+                        <ul>
+                            @foreach (var item in ViewBag.quickLinks)
+                            {
+                                <li class="@item.IsActive">
+                                    @if (!String.IsNullOrEmpty(item.Link))
+                                    {
+                                        <a href="@item.Link" target="_blank">@item.Name</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="javascript:void(0);" data-content="@item.PageContent" data-bind="@item.Name" onclick="openPageContent(this)">@item.Name</a>
+                                    }
+
+                                </li>
+                            }
+                        </ul>
+                    }
+                </div>
+                <div class="col-lg-4 col-md-12 col-sm-12 mb-4">
+                    <h3>Contact Us</h3>
+                    <p>For the latest updates, deals, offers and coupons</p>
+                    <div class="row">
+                        <form id="frmContactUs">
+                            <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                                <input type="email" id="emailAddress" name="emailAddress" placeholder="Enter Email Address" maxlength="50" autocomplete="off" />
+                            </div>
+                            <div class="col-12 mt-1">
+                                <button type="button" onclick="btnSaveContactUs()">Sign Up</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 mt-5 text-center">
+                    <p>&#169; Copyright © 2020- @DateTime.Now.Year @Model.RestaurantModel.Name<br>Managed by <a href="https://smartmenupad.com" target="_blank">Smart Menu Pad</a></p>
+                </div>
+            </div>
+        </div>
+    </footer>
+    @RenderSection("scripts", required: false)
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="~/Content/theme/js/toastr.js"></script>
+    <script src="~/Content/theme/js/jquery-input-mask-phone-number.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://www.malot.fr/bootstrap-datetimepicker/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="~/Content/project/js/frontEndMenu.js"></script>
+</body>
+</html>
+<!-- Modal -->
+<div class="modal fade" id="addToCartModal" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-body p-0">
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="offlineModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-body closeAlertPopup">
+                <img src="@ViewBag.OfflineImg" alt="Image" />
+                <p><span>You can place your order between @Model.RestaurantModel.BusinessHours.OpenTime12Hour-@Model.RestaurantModel.BusinessHours.CloseTime12Hour</span></p>
+                <button type="button" class="popupClose" data-dismiss="modal"><i class="sm-close"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="locationFarAwayModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-body closeAlertPopup">
+                <img src="@ViewBag.LocationFarAwayImg" alt="Image" />
+                <p>Sorry, delivery isn't available for this address</p>
+                <button type="button" class="popupClose" data-dismiss="modal"><i class="sm-close"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="minimumOrderAmtModal" data-backdrop="static" data-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content text-center">
+            <div class="modal-body closeAlertPopup">
+                <img src="@ViewBag.MinOrderImg" alt="Image" />
+                <p>Minimum @ViewBag.CurrencySymbol<span id="minOrder"></span> ordered amount required for this location</p>
+                <button type="button" class="popupClose" data-dismiss="modal"><i class="sm-close"></i></button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="pageContentModel" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title popupHeading"></h5>
+                <button type="button" class="popupClose" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body p-3">
+            </div>
+        </div>
+    </div>
+</div>

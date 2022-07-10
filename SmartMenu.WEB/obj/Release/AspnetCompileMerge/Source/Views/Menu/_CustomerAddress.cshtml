@@ -1,0 +1,49 @@
+﻿@model SmartMenu.DAL.Models.CustomerModel
+
+<div class="col-12 mb-3 lastAddress">
+    <h4>John Smith</h4>
+    <p><b>Address:- </b> 2516 ALEXA VIEWS, ZSDASF, SALVADORSIDE, New York City, 95662</p>
+    <button>Edit</button>
+</div>
+
+<div class="col-12 mb-4">
+    <div class="checkoutSec">
+        @Html.HiddenFor(m => m.Id)
+        <div class="row">
+            <h3>Delivery Address</h3>
+            <p>Please add your delivery address.</p>
+
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>First Name</label>
+                <input type="text" name="firstName" id="firstName" maxlength="50" autocomplete="off" placeholder="Enter First Name" value="@Model.FirstName" />
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Last Name</label>
+                <input type="text" name="lastName" id="lastName" maxlength="50" autocomplete="off" placeholder="Enter Last Name" value="@Model.LastName" />
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Address1</label>
+                <input type="text" name="address" id="address" maxlength="100" autocomplete="off" placeholder="Enter Address" value="" />
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Address2</label>
+                <input type="text" name="landmark" id="landmark" maxlength="50" autocomplete="off" placeholder="Enter Address2" value="" />
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>State</label>
+                @Html.DropDownList("State", (SelectList)ViewBag.States, null, new { })
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>City</label>
+                <input type="text" placeholder="City" name="city" id="city" maxlength="50" autocomplete="off" value="" />
+            </div>
+            <div class="col-lg-6 col-md-12 mb-3">
+                <label>Zip Code</label>
+                <input type="text" class="numbers-only" name="zipCode" id="zipCode" maxlength="6" autocomplete="off" placeholder="Enter Zip Code" value="" />
+            </div>
+            <div class="col-lg-12 mb-3">
+                <button class="orderPlaceBtn" type="button" onclick="btnSaveUserInfo()">Continue</button>
+            </div>
+        </div>
+    </div>
+</div>

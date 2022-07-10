@@ -1,0 +1,206 @@
+@font-face {
+  font-family:'gotham_light';
+  src: url('../fonts/Gotham-Light.eot');
+  src: url('../fonts/Gotham-Light.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Gotham-Light.woff2') format('woff2'),
+      url('../fonts/Gotham-Light.woff') format('woff'),
+      url('../fonts/Gotham-Light.ttf') format('truetype'),
+      url('../fonts/Gotham-Light.svg#Gotham-Light') format('svg');
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family:'gotham_book';
+  src: url('../fonts/Gotham-Book.eot');
+  src: url('../fonts/Gotham-Book.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Gotham-Book.woff2') format('woff2'),
+      url('../fonts/Gotham-Book.woff') format('woff'),
+      url('../fonts/Gotham-Book.ttf') format('truetype'),
+      url('../fonts/Gotham-Book.svg#Gotham-Book') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family:'gotham_medium';
+  src: url('../fonts/Gotham-Medium.eot');
+  src: url('../fonts/Gotham-Medium.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Gotham-Medium.woff2') format('woff2'),
+      url('../fonts/Gotham-Medium.woff') format('woff'),
+      url('../fonts/Gotham-Medium.ttf') format('truetype'),
+      url('../fonts/Gotham-Medium.svg#Gotham-Medium') format('svg');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family:'gotham_bold';
+  src: url('../fonts/Gotham-Bold.eot');
+  src: url('../fonts/Gotham-Bold.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Gotham-Bold.woff2') format('woff2'),
+      url('../fonts/Gotham-Bold.woff') format('woff'),
+      url('../fonts/Gotham-Bold.ttf') format('truetype'),
+      url('../fonts/Gotham-Bold.svg#Gotham-Bold') format('svg');
+  font-weight: bold;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family:'gotham_black';
+  src: url('../fonts/Gotham-Black.eot');
+  src: url('../fonts/Gotham-Black.eot?#iefix') format('embedded-opentype'),
+      url('../fonts/Gotham-Black.woff2') format('woff2'),
+      url('../fonts/Gotham-Black.woff') format('woff'),
+      url('../fonts/Gotham-Black.ttf') format('truetype'),
+      url('../fonts/Gotham-Black.svg#Gotham-Black') format('svg');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+    font-family: "sm-icon";
+    src: url("../../theme/fonts/sm-icon.eot");
+    src: url("../../theme/sm-icon.eot?#iefix") format("embedded-opentype"), url("../../theme/fonts/sm-icon.woff") format("woff"), url("../../theme/fonts/sm-icon.ttf") format("truetype"), url("../../theme/fonts/sm-icon.svg#sm-icon") format("svg");
+    font-weight: normal;
+    font-style: normal;
+}
+[data-icon]:before {
+  font-family: "sm-icon" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+[class^="sm-"]:before,
+[class*=" sm-"]:before {
+  font-family: "sm-icon" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.sm-add:before {
+  content: "\61";
+}
+.sm-arrow-down-sign-to-navigate:before {
+  content: "\62";
+}
+.sm-back:before {
+  content: "\63";
+}
+.sm-bill:before {
+  content: "\64";
+}
+.sm-call:before {
+  content: "\65";
+}
+.sm-coffee:before {
+  content: "\66";
+}
+.sm-config:before {
+  content: "\67";
+}
+.sm-cook:before {
+  content: "\69";
+}
+.sm-cooking:before {
+  content: "\6a";
+}
+.sm-dashboard:before {
+  content: "\6b";
+}
+.sm-delete:before {
+  content: "\6c";
+}
+.sm-dish:before {
+  content: "\6d";
+}
+.sm-edit:before {
+  content: "\6e";
+}
+.sm-email:before {
+  content: "\6f";
+}
+.sm-facebook-logo:before {
+  content: "\70";
+}
+.sm-fast-food:before {
+  content: "\71";
+}
+.sm-fine-dining:before {
+  content: "\72";
+}
+.sm-instagram:before {
+  content: "\73";
+}
+.sm-left-arrow:before {
+  content: "\74";
+}
+.sm-linkedin:before {
+  content: "\75";
+}
+.sm-location:before {
+  content: "\76";
+}
+.sm-logout:before {
+  content: "\77";
+}
+.sm-menu:before {
+  content: "\78";
+}
+.sm-money:before {
+  content: "\79";
+}
+.sm-more:before {
+  content: "\7a";
+}
+.sm-password:before {
+  content: "\41";
+}
+.sm-photo:before {
+  content: "\42";
+}
+.sm-play:before {
+  content: "\43";
+}
+.sm-reports:before {
+  content: "\44";
+}
+.sm-right:before {
+  content: "\45";
+}
+.sm-right-arrow:before {
+  content: "\46";
+}
+.sm-search:before {
+  content: "\47";
+}
+.sm-setting:before {
+  content: "\48";
+}
+.sm-shop:before {
+  content: "\49";
+}
+.sm-shopping-cart:before {
+  content: "\4a";
+}
+.sm-team:before {
+  content: "\4b";
+}
+.sm-twitter:before {
+  content: "\4c";
+}
+.sm-up-and-down:before {
+  content: "\4d";
+}
+.sm-user:before {
+  content: "\4e";
+}

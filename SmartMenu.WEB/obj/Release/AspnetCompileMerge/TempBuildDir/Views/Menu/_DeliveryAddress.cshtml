@@ -1,0 +1,89 @@
+﻿@model SmartMenu.DAL.Models.CustomerViewModel
+
+<div class="checkoutSec">
+    <h3>Choose An Address</h3>
+    <div class="col-12 mb-4">
+        <form id="frmPlaceOrder">
+            <div class="row">
+                <div class="col-lg-12 text-end" style="padding: 10px;">
+                    <button type="button" onclick="showHideAddressPanel('add',this)" class="addNewDeliveryAddress">Add New Address</button>
+                </div>
+                <div id="addressespanel">
+                    @if (Model != null && Model.CustomerAddresses.Count() > 0)
+                    {
+                        <div id="editDeliveryAddressSection">
+                            <p>Please Select a delivery address.</p>
+                            @foreach (var item in Model.CustomerAddresses)
+                            {
+                                <label class="lastAddress">
+                                    <input type="radio" name="addressRadio" value="@item.CustomerAddressId" data-content="@item.CustomerId" onclick="showHideAddressPanel('edit',this)" />
+                                    <h4>@String.Format("{0} {1}", item.FirstName, item.LastName)</h4>
+                                    <p>@item.Address1 @item.Address2 @item.City @item.State @item.ZipCode</p>
+                                </label>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            No address found
+                        </div>
+                    }
+                </div>
+
+            </div>
+            <div style="display:none" id="addDeliveryAddressSection">
+                <p>Please add your delivery address.</p>
+                @Html.HiddenFor(m => m.Id)
+                <input type="hidden" id="hdnLatitude" />
+                <input type="hidden" id="hdnLongitude" />
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Email Address Name</label>
+                        <input type="text" name="emailAddress" id="emailAddress" maxlength="50" autocomplete="off" placeholder="Enter Email Address" value="" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>First Name</label>
+                        <input type="text" name="firstName" id="firstName" maxlength="50" autocomplete="off" placeholder="Enter First Name" value="" />
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Last Name</label>
+                        <input type="text" name="lastName" id="lastName" maxlength="50" autocomplete="off" placeholder="Enter Last Name" value="" />
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Address</label>
+                        <input type="text" name="address1" id="address1" maxlength="200" autocomplete="off" placeholder="Enter Address" value="" />
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>&nbsp;</label>
+                        <input type="text" name="address2" id="address2" maxlength="50" autocomplete="off" placeholder="Apt, Floor, Suite, etc.(Optional)" value="" />
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>City</label>
+                        <input type="text" placeholder="City" name="city" id="city" maxlength="50" autocomplete="off" value="" readonly />
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>State</label>
+                        <input type="text" placeholder="State" name="state" id="state" maxlength="50" autocomplete="off" value="" readonly />
+                    </div>
+
+                    <div class="col-lg-6 col-md-12 mb-3">
+                        <label>Zip Code</label>
+                        <input type="text" class="numbers-only" name="zipCode" id="zipCode" maxlength="6" autocomplete="off" placeholder="Enter Zip Code" value="" readonly />
+                    </div>
+                    <div class="col-lg-12 mb-3">
+                        <button class="orderPlaceBtn" type="button" onclick="btnSaveUserInfo()">Continue</button>
+                        @if (Model.CustomerAddresses.Count() > 0)
+                        {
+                            <button class="orderPlaceBtn" type="button" onclick="showHideAddressPanel('view',this)">Chosse from Saved</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+

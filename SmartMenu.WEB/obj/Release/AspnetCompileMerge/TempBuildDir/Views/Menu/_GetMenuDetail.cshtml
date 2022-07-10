@@ -1,0 +1,93 @@
+﻿@model SmartMenu.DAL.Models.MenuItemViewModel
+
+<div class="productImageName">
+    <button type="button" class="popupClose" data-dismiss="modal">&times;</button>
+    @if (string.IsNullOrEmpty(Model.CategoryImagePath))
+    {
+        <div class="menuItemImagebg" style="background-image:url('@Model.ImagePath'); background-position:center top; background-repeat: no-repeat; background-size: cover;"></div>
+    }
+</div>
+<form id="frmAddToCart">
+    @Html.AntiForgeryToken()
+    <input type="hidden" id="hdnIsMultipleSize" value="@(Model.IsMultipleSize==true ?"true":"false")" />
+    <input type="hidden" id="hdnActionType" value="@Model.ActionType" />
+    <input type="hidden" id="hdnRowIndex" value="@Model.RowIndex" />
+    <input type="hidden" id="hdnQty" value="@Model.Qty" />
+    <div class="addonsDetails">
+        <input type="hidden" id="hdnFinalPrice" value="@Model.FinalPrice" />
+        <h3>@Model.Name</h3>
+        <p>@Model.Description</p>
+        @if (Model.IsMultipleSize == false)
+        {
+            <span class="product_price span_price" data-bind="@Model.FinalPrice">@ViewBag.CurrencySymbol@Model.FinalPrice</span>
+        }
+        @if (Model.MenuMultipleSizesList.Count() > 0)
+        {
+            <h4>Size</h4>
+            <ul class="menuItemOption">
+                <span class="error"></span>
+                @foreach (var item in Model.MenuMultipleSizesList)
+                {
+                    <li>
+                        <label>
+                            <input type="radio" name="itemSize" value="@item.Name" data-content="@item.Price" onchange="calculateTotalCartAmount()" @(item.Price == Model.FinalPrice ? "checked" : "") @(Model.AddedMenuMultipleSizesList != null && Model.AddedMenuMultipleSizesList.Where(c => c.Name == item.Name).Any() == true ? "checked" : "") />@item.Name
+                        </label>
+                        <span>@ViewBag.CurrencySymbol@item.Price</span>
+                    </li>
+                }
+            </ul>
+        }
+        @if (Model.MenuAddOnsChoicesList.Count() > 0)
+        {
+            foreach (var item in Model.MenuAddOnsChoicesList)
+            {
+                <h4>@item.Title @(item.IsRequired==true ?"(Required)":"")</h4>
+
+                <ul class="menuItemOption addOnsSection @(item.IsRequired==true ?"required":"")">
+                    <span class="error"></span>
+                    <input type="hidden" id="hdnTitle" value="@item.Title" />
+                    <input type="hidden" id="hdnIsRequired" value="@(item.IsRequired==true ? "true":"false")" />
+                    <input type="hidden" id="hdnMin" value="@item.Min" />
+                    <input type="hidden" id="hdnMax" value="@item.Max" />
+                    @foreach (var data in item.AddOnChoiceItems)
+                    {
+                        bool IsChecked = false;
+                        if (Model.AddedMenuAddOnsChoicesList != null && Model.AddedMenuAddOnsChoicesList.Count() > 0)
+                        {
+                            foreach (var addedItem in Model.AddedMenuAddOnsChoicesList)
+                            {
+                                if (addedItem.AddOnChoiceItems != null && addedItem.AddOnChoiceItems.Count() > 0)
+                                {
+                                    if (addedItem.AddOnChoiceItems.Where(c => c.Name == data.Name).FirstOrDefault() != null)
+                                    {
+                                        IsChecked = true;
+                                    }
+                                }
+
+                            }
+                        }
+                        <li>
+                            <label>
+                                <input type="checkbox" name="itemAddOns_@item.Title" value="@data.Price" onchange="calculateTotalCartAmount()" data-content="@data.Name" @(IsChecked == true ? "checked" : "") />@data.Name
+                            </label>
+                            @if (@data.Price > 0)
+                            {
+                                <span>@ViewBag.CurrencySymbol@data.Price</span>
+                            }
+                        </li>
+                    }
+                </ul>
+            }
+        }
+        <div class="cartButtonLeft">
+            <button type="button"
+                    onclick="addToCartSubmit('@Model.Id', '@Model.Name', '@(Model.IsMultipleSize==true ? Model.FinalPrice:Model.Price)', '@Model.Qty',  '@Model.Description', '@Model.ImagePath', '@Model.CategoryImagePath')"
+                    class="cartBtn">
+                Add to Cart
+            </button>
+        </div>
+        <div class="cartButtonRight">
+            @*<span>$@Model.FinalPrice</span>*@
+        </div>
+    </div>
+</form>

@@ -1,0 +1,22 @@
+﻿@model SmartMenu.DAL.Models.MenuDataModel
+@{
+    ViewBag.Title = "TrackOrder";
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+<div class="container trackingWrapper">
+    <form id="frmOrderInfo">
+        <div class="row pt-4 pb-4">
+            <div class="col-lg-12 col-md-12 col-sm-12 mb-3">
+                <h1>Track your order</h1>
+                <p>Please enter your order number to view your order status.</p>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-6 mb-3">
+                <input type="text" class="form-control" maxlength="10" placeholder="Order Number: Ord-1001" id="txtOrderNo" name="txtOrderNo" autocomplete="off" />
+            </div>
+            <div class="col-lg-4 col-md-4 col-sm-4 mb-3">
+                <button type="button" onclick="return validateOrderInfo()">Submit</button>
+            </div>
+        </div>
+    </form>
+    <div id="orderInfo"></div>
+</div>

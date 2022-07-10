@@ -1,0 +1,108 @@
+/*..Extra small devices (portrait phones, less than 576px)..*/
+@media (max-width: 575.98px) {
+    .mobileHeading p{
+        padding: 0px;
+    }
+    .sliderImage{
+        width: 100%; 
+    }
+    .partnerLogo{
+        width: 100%;
+    }
+    .howItWork{
+        width: 100%;
+    }
+    .videoSection{
+        margin-bottom: 80px;
+    }
+    .videoSection img{
+        width: 100%;
+    }
+    .price-d-flex{
+        display: block !important;
+    }
+    .pricebg{
+        margin-bottom: 80px;
+    }
+    .footerSection{
+        margin-bottom: 30px;
+    }
+    .rawMargin{
+        margin-right: 0 !important;
+        margin-left: 0 !important;
+    }
+    #mainNav{
+        padding-bottom: 20px;
+    }
+    .features-section{
+        padding: 20px 0px 80px 0px;
+    }
+}
+
+/*..Small devices (landscape phones, 576px and up)..*/
+@media (max-width: 767.98px) {
+    
+}
+
+/*..Medium devices (tablets, 768px and up)..*/
+@media (max-width: 991.98px) {
+    #headerSection{
+        text-align: center;
+    }
+    #headerSection p{
+        text-align: center;
+        padding: 0px !important;
+    }
+    .sliderImage{
+        width: 100%;
+        margin: 50px 0px 0px 0px;
+    }
+    .howItWork{
+        width: 100%;
+    }
+    .videoSection{
+        margin-bottom: 80px;
+    }
+    .videoSection img{
+        width: 100%;
+    }
+    .pricebg{
+        margin-bottom: 80px;
+    }
+    .footerSection{
+        margin-bottom: 30px;
+    }
+    .mainFeatures{
+        padding: 50px 0px 250px 0px !important;
+    }
+    .demoSection{
+        padding: 0px 30px 50px 30px;
+        text-align: center;
+        height: auto !important;
+    }
+    .trialHeading{
+        padding: 40px 0px 10px 0px !important;
+    }
+}
+
+/*..Large devices (desktops, 992px and up)..*/
+@media (max-width: 1199.98px) { 
+    #mainNav {
+        padding-top: 0;
+        padding-bottom: 0;
+        border-bottom: none;
+        background-color: transparent;
+        transition: background-color 0.3s ease-in-out;
+    }
+    .workContent p{
+        line-height: 24px;
+    }
+    .partnerLogo{
+        width: 100%;
+    }
+}
+
+/*..Extra large devices (large desktops, 1200px and up)..*/
+@media (min-width: 1200px) {
+
+}

@@ -1,0 +1,192 @@
+﻿@model SmartMenu.DAL.Models.MenuDataModel
+@using SmartMenu.WEB.Helpers
+@{
+    Layout = "~/Views/Shared/_LayoutMenu.cshtml";
+}
+@*<div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-12 offerImage">
+                <img src="~/Content/menu/img/Offer-1.png" alt="image" />
+            </div>
+            <div class="col-lg-4 col-md-12 offerImage">
+                <img src="~/Content/menu/img/Offer-2.png" alt="image" />
+            </div>
+            <div class="col-lg-4 col-md-12 offerImage">
+                <img src="~/Content/menu/img/Offer-3.png" alt="image" />
+            </div>
+        </div>
+    </div>*@
+<div class="menuTabMenu sticky-top navScroll">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 col-lg-12 col-md-12 col-sm-12" id="myNavbar">
+                <ul>
+                    @foreach (var cat in Model.CategoryModelList)
+                    {
+                        <li><a href="#@cat.Name.Replace(" ", "")">@cat.Name</a></li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="menuContainer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-9 col-12">
+                <div class="menuList">
+                    @{
+                        var data = Model.MenuItemViewModelList.GroupBy(c => new
+                        {
+                            c.CategoryId,
+                            c.CategoryName,
+                            c.CategoryImagePath
+                        }).ToList();
+                    }
+                    @foreach (var item in data)
+                    {
+                        <div class="row navpadding" id="@item.Key.CategoryName.Replace(" ", "")">
+                            <div class="col-12 mb-4">
+                                <h2 class="">@item.Key.CategoryName</h2>
+                                @if (!String.IsNullOrEmpty(item.Key.CategoryImagePath))
+                                {
+                                    <div class="categoryImageBg" style="background-image: url('@item.Key.CategoryImagePath');"></div>
+                                }
+                            </div>
+                            @foreach (var menu in item)
+                            {
+                                <div class="col-lg-6 col-md-12 mb-5">
+                                    <a href="javascript:void(0)"
+                                       @(ViewBag.IsClosed == false ? "onclick=openAddToCartModal('0','" + @menu.Id + "','add')" : "")>
+                                        <div class="row align-items-start">
+                                            @if (item.Key.CategoryImagePath == string.Empty)
+                                            {
+                                                <div class="col">
+                                                    <div class="menuItemImage" style="background-image: url('@menu.ImagePath');">
+                                                        <div class="@(menu.VegNonVeg=="Veg" ? "veg-icon":(menu.VegNonVeg=="Non-Veg"?"non-veg-icon":""))" title="@(menu.VegNonVeg=="Veg" ? "Vegetarian ":(menu.VegNonVeg=="Non-Veg"?"Non-Vegetarian":""))"></div>
+                                                    </div>
+                                                </div>
+                                            }
+                                            <div class="col">
+                                                <div class="pe-3">
+                                                    <span class="product_price">@ViewBag.CurrencySymbol@(menu.FinalPrice)</span>
+                                                    <h3>@menu.Name</h3>
+                                                    <p>@menu.Description</p>
+                                                    @if (ViewBag.IsClosed == false)
+                                                    {
+                                                        <input type="button" class="addCartBtn customAddCartBtn_@menu.Id" value="Add to cart" />
+                                                        if (SessionManager.AddTocartMenuItem.Where(c => c.Id == menu.Id).Count() == 0)
+                                                        {
+                                                            <span class="itemAddedCounter_@menu.Id"></span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span class="itemAddedCounter_@menu.Id itemCounter">
+                                                                @Convert.ToInt32((SessionManager.AddTocartMenuItem.Where(c => c.Id == menu.Id).Select(c => c.Qty).Sum()))
+                                                            </span>
+                                                        }
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-3 col-12">
+                <div class="cartDiv" id="popupMobileCart">
+                    <div class="col-12 navpadding menuList">
+                        <h2>Your Order</h2>
+                        <div class="carPageSubtitle">From <span>@Model.RestaurantModel.Name</span></div>
+                    </div>
+                    <div class="col-12">
+                        <div class="cartView">
+                            @if (SessionManager.AddTocartMenuItem.Count() > 0)
+                            {
+                                <div class="cartItem">
+                                    @{int i = 0;}
+                                    @foreach (var cartItem in SessionManager.AddTocartMenuItem)
+                                    {
+                                        <div class="col-12 cartItemRow" id="@cartItem.Id">
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="cartProductName">@cartItem.Name</div>
+                                                    <div class="row">
+                                                        <div class="col-9">
+                                                            <span class="product_price">@ViewBag.CurrencySymbol@(cartItem.TotalAmount)</span>
+                                                            <button type="button" class="removeBtn" onclick="openAddToCartModal(@i,'@cartItem.Id','edit')">
+                                                                @*<i class="sm-edit"></i>*@ Edit
+                                                            </button>
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <div class="input-group">
+                                                                <select class="form-control qty" onchange="getQty(@i, '@cartItem.Id',this)">
+                                                                    <option value="0">Remove</option>
+                                                                    <option value="1" @(cartItem.Qty == 1 ? "selected" : "")>1</option>
+                                                                    <option value="2" @(cartItem.Qty == 2 ? "selected" : "")>2</option>
+                                                                    <option value="3" @(cartItem.Qty == 3 ? "selected" : "")>3</option>
+                                                                    <option value="4" @(cartItem.Qty == 4 ? "selected" : "")>4</option>
+                                                                    <option value="5" @(cartItem.Qty == 5 ? "selected" : "")>5</option>
+                                                                    <option value="6" @(cartItem.Qty == 6 ? "selected" : "")>6</option>
+                                                                    <option value="7" @(cartItem.Qty == 7 ? "selected" : "")>7</option>
+                                                                    <option value="8" @(cartItem.Qty == 8 ? "selected" : "")>8</option>
+                                                                    <option value="9" @(cartItem.Qty == 9 ? "selected" : "")>9</option>
+                                                                    <option value="10" @(cartItem.Qty == 10 ? "selected" : "")>10</option>
+                                                                    <option value="11" @(cartItem.Qty == 11 ? "selected" : "")>11</option>
+                                                                    <option value="12" @(cartItem.Qty == 12 ? "selected" : "")>12</option>
+                                                                    <option value="13" @(cartItem.Qty == 13 ? "selected" : "")>13</option>
+                                                                    <option value="14" @(cartItem.Qty == 14 ? "selected" : "")>14</option>
+                                                                    <option value="15" @(cartItem.Qty == 15 ? "selected" : "")>15</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        i++;
+                                    }
+                                </div>
+                                @*<div class="col-12 promoCode">
+                                        <input type="text" placeholder="Apply Promo Code" class="promoCodeText" />
+                                    </div>*@
+                                <!--promo Code-->
+                                <div class="col-12">
+                                    <div class="amountRow">
+                                        <p>Sub Total</p>
+                                        <span class="subTotal">
+                                            @ViewBag.CurrencySymbol@(SessionManager.AddTocartMenuItem!=null &&
+                                                SessionManager.AddTocartMenuItem.Count() > 0 ?
+                                                SessionManager.AddTocartMenuItem.Select(c=>c.TotalAmount).Sum():0)
+                                        </span>
+                                    </div>
+                                    @*<div class="taxAmountRow">
+                                        <p>Taxes & Charges</p>
+                                        <span>@String.Format("{0}{1}", ViewBag.CurrencySymbol, 0.00)</span>
+                                    </div>*@
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="row">
+                                    <div class="col-12 emptyCart">
+                                        @*<img src="~/Content/menu/img/cart-image.png" alt="Image" />*@
+                                        <img src="@ViewBag.EmptyCartImg" alt="Image" />
+                                        <p>"Good food is always cooking! Order food and get delivery in the fastest time on the town."</p>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <button class="proceedBtn mt-3" style="display:@(SessionManager.AddTocartMenuItem != null && SessionManager.AddTocartMenuItem.Count() > 0?"block":"none")" type="button" onclick="return validateOrderAmt()">Proceed to checkout<span>@ViewBag.CurrencySymbol@Convert.ToDecimal((SessionManager.AddTocartMenuItem.Select(c => c.TotalAmount).Sum()))</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="myNavbar">
+    <a href="#popupMobileCart" class="mobileCartBtn"><i class="sm-cart"></i>View Cart</a>
+</div>

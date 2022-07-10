@@ -1,0 +1,74 @@
+﻿@using SmartMenu.WEB.Helpers
+@if (SessionManager.AddTocartMenuItem.Count() > 0)
+{
+    <div class="cartItem">
+        @{int i = 0;}
+        @foreach (var cartItem in SessionManager.AddTocartMenuItem)
+        {
+            <div class="col-12 cartItemRow" id="@cartItem.Id">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="cartProductName">@cartItem.Name</div>
+                    </div>
+                    <div class="col-12">
+                        <div class="row">
+                            <div class="col-9">
+                                <span class="product_price">@String.Format("{0}{1}", ViewBag.CurrencySymbol, cartItem.TotalAmount)</span>
+                                <button type="button" class="removeBtn" onclick="openAddToCartModal(@i,'@cartItem.Id','edit')">
+                                    @*<i class="sm-edit"></i>*@ Edit
+                                </button>
+                            </div>
+                            <div class="col-3">
+                                <div class="input-group">
+                                    <select class="form-control qty" onchange="getQty(@i,'@cartItem.Id', this)">
+                                        <option value="0">Remove</option>
+                                        <option value="1" @(cartItem.Qty == 1 ? "selected" : "")>1</option>
+                                        <option value="2" @(cartItem.Qty == 2 ? "selected" : "")>2</option>
+                                        <option value="3" @(cartItem.Qty == 3 ? "selected" : "")>3</option>
+                                        <option value="4" @(cartItem.Qty == 4 ? "selected" : "")>4</option>
+                                        <option value="5" @(cartItem.Qty == 5 ? "selected" : "")>5</option>
+                                        <option value="6" @(cartItem.Qty == 6 ? "selected" : "")>6</option>
+                                        <option value="7" @(cartItem.Qty == 7 ? "selected" : "")>7</option>
+                                        <option value="8" @(cartItem.Qty == 8 ? "selected" : "")>8</option>
+                                        <option value="9" @(cartItem.Qty == 9 ? "selected" : "")>9</option>
+                                        <option value="10" @(cartItem.Qty == 10 ? "selected" : "")>10</option>
+                                        <option value="11" @(cartItem.Qty == 11 ? "selected" : "")>11</option>
+                                        <option value="12" @(cartItem.Qty == 12 ? "selected" : "")>12</option>
+                                        <option value="13" @(cartItem.Qty == 13 ? "selected" : "")>13</option>
+                                        <option value="14" @(cartItem.Qty == 14 ? "selected" : "")>14</option>
+                                        <option value="15" @(cartItem.Qty == 15 ? "selected" : "")>15</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            i++;
+        }
+    </div>
+    @*<div class="col-12 promoCode">
+            <input type="text" placeholder="Apply Promo Code" class="promoCodeText" />
+        </div>*@
+
+    <!--promo Code-->
+    <div class="col-12">
+        <div class="amountRow">
+            <p>Sub Total</p>
+            <span class="subTotal">@String.Format("{0}{1}", ViewBag.CurrencySymbol, @SessionManager.AddTocartMenuItem.Select(c => c.TotalAmount).Sum())</span>
+        </div>
+        @*<div class="taxAmountRow">
+            <p>Taxes & Charges</p>
+            <span>@String.Format("{0}{1}", ViewBag.CurrencySymbol, 0.00)</span>
+        </div>*@
+    </div>
+}
+else
+{
+    <div class="row">
+        <div class="col-12 emptyCart">
+            <img src="@ViewBag.EmptyCartImg" alt="Image" />
+            <p>"Good food is always cooking! Order food and get delivery in the fastest time on the town."</p>
+        </div>
+    </div>
+}

@@ -1,0 +1,39 @@
+﻿@model IEnumerable<SmartMenu.DAL.Models.MenuCartModel>
+<table cellpadding="2" cellspacing="1" style="width:100%; margin-bottom: 10px; border-bottom:1px solid #d3d3d3; padding-bottom:10px; border-collapse:collapse;">
+    <thead>
+        <tr>
+            <th style="text-align:left; border-bottom:1px solid #d3d3d3; padding:0px 0px 10px 0px;">S.No</th>
+            <th style="text-align:left; border-bottom:1px solid #d3d3d3; padding:0px 0px 10px 0px;">Item Name</th>
+            <th style="text-align:center; border-bottom:1px solid #d3d3d3; padding:0px 0px 10px 0px;">Price</th>
+            <th style="text-align:right; border-bottom:1px solid #d3d3d3; padding:0px 0px 10px 0px;">Qty</th>
+            <th style="text-align:right; border-bottom:1px solid #d3d3d3; padding:0px 0px 10px 0px;">Amount</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            decimal _addOnPrice = 0;
+            <tr>
+                <td style="text-align:left; border-bottom:1px solid #d3d3d3; padding:10px 0px 10px 0px;">#</td>
+                <td style="text-align:left; border-bottom:1px solid #d3d3d3; padding:10px 0px 10px 0px;">
+                    @item.Name <br />
+                    @if (item.IsMultipleSize == true)
+                    {
+                        <span>Size:-@item.ItemSizeList.Select(c => c.Name).FirstOrDefault()</span>
+                    }
+                    @if (item.AddOnsItemList != null && item.AddOnsItemList.Count() > 0)
+                    {
+                        for (int i = 0; i < item.AddOnsItemList.Count(); i++)
+                        {
+                            _addOnPrice += item.AddOnsItemList[i].AddOnChoiceItems.Select(c => c.Price).Sum();
+                            <span>@item.AddOnsItemList[i].Title:-@String.Join(",", item.AddOnsItemList[i].AddOnChoiceItems.Select(c => c.Name).ToList())</span><br />
+                        }
+                    }
+                </td>
+                <td style="text-align:center; border-bottom:1px solid #d3d3d3; padding:10px 0px 10px 0px;">@ViewBag.CurrencySymbol@(item.IsMultipleSize==true ? item.ItemSizeList.Select(c=>c.Price).FirstOrDefault():item.Price+_addOnPrice)</td>
+                <td style="text-align:right; border-bottom:1px solid #d3d3d3; padding:10px 0px 10px 0px;">@item.Qty</td>
+                <td style="text-align:right; border-bottom:1px solid #d3d3d3; padding:10px 0px 10px 0px;">@ViewBag.CurrencySymbol@item.TotalAmount</td>
+            </tr>
+        }
+    </tbody>
+</table>
